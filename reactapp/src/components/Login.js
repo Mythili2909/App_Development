@@ -1,7 +1,14 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import '../assets/style/Login.css';
 
 function Login() {
     const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const [errors, setErrors] = useState({
         email: '',
         password: ''
     });
@@ -16,13 +23,33 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        const newErrors = {};
+
+        if (!formData.email) {
+            newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'Email address is invalid';
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Password is required';
+        } else if (formData.password.length < 6) {
+            newErrors.password = 'Password must be at least 6 characters';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+        } else {
+            setErrors({});
+            console.log(formData);
+            // Proceed with form submission logic, e.g., API call
+        }
     };
 
     return (
-        <div>
+        <div className="login-container">
             <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="login-form">
                 <label>Username</label>
                 <input
                     type="email"
@@ -31,6 +58,7 @@ function Login() {
                     value={formData.email}
                     onChange={handleChange}
                 />
+                {errors.email && <p className="error">{errors.email}</p>}
 
                 <label>Password</label>
                 <input
@@ -40,7 +68,13 @@ function Login() {
                     onChange={handleChange}
                     name="password"
                 />
+                {errors.password && <p className="error">{errors.password}</p>}
+
                 <button type="submit">Login</button>
+                <div className="links">
+                    <p><Link to="/forgot-password">Forgot Password?</Link></p>
+                    <p>Doesn't have an account? <Link to="/register">Register</Link></p>
+                </div>
             </form>
         </div>
     );
