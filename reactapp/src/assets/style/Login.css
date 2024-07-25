@@ -1,71 +1,59 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
+    background-color: #FFFFFF; /* Background color for the entire page */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
-h1 {
-    color: #333;
-    text-align: center;
+.container {
+    background-color: #FFFFFF; /* Background color for the container (clean white background) */
+    width: 400px; /* Adjust width as needed */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
     display: flex;
     flex-direction: column;
 }
 
-label {
-    margin-bottom: 8px;
-    font-weight: bold;
-}
-
-input {
-    margin-bottom: 10px;
+input[type="text"],
+input[type="password"],
+textarea {
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
     padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007BFF;
+    background-color: #FF7777; /* Button background color */
     color: #fff;
-    font-size: 16px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #ff6666; /* Hover effect for button */
 }
 
-p {
-    text-align: center;
-    margin-top: 20px;
+.error {
+    color: #ff0000; /* Error message color */
+    margin-bottom: 10px;
 }
 
-p a {
-    color: #007BFF;
+a {
+    color: #FF7777; /* Link color */
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-p a:hover {
-    text-decoration: underline;
-}
-
-p, .error {
-    color: #ff0000;
-    font-size: 12px;
+a:hover {
+    color: #ff6666; /* Hover effect for links */
 }

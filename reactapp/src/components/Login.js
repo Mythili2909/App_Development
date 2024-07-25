@@ -73,7 +73,7 @@ function Login() {
                 <button type="submit">Login</button>
                 <div className="links">
                     <p><Link to="/forgot-password">Forgot Password?</Link></p>
-                    <p>Doesn't have an account? <Link to="/register">Register</Link></p>
+                    <p>Doesn't have an account? <Link to="/register">Sign In</Link></p>
                 </div>
             </form>
         </div>

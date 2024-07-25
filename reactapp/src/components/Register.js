@@ -65,7 +65,7 @@ function Register() {
 
     return (
         <div>
-            <h1>Register</h1>
+            <h1>Sign In</h1>
             <form onSubmit={handleSubmit}>
                 <label>Firstname </label>
                 <input
@@ -106,7 +106,7 @@ function Register() {
                 />
                 {errors.dob && <p style={{ color: 'red' }}>{errors.dob}</p>}
 
-                <button type="submit">Register</button>
+                <button type="submit">Sign In</button>
             <p>Already have an account? <Link to='/login'>Login here</Link></p>
             </form>
         </div>
