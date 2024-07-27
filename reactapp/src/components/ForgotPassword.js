@@ -55,7 +55,7 @@ function ForgotPassword() {
         <div className="forgot-password-container">
             <h1>Reset Password</h1>
             <form onSubmit={handleSubmit} className="forgot-password-form">
-                <label>New Password</label>
+ 
                 <input
                     type="password"
                     placeholder="Enter new password"
@@ -65,7 +65,7 @@ function ForgotPassword() {
                 />
                 {errors.newPassword && <p className="error">{errors.newPassword}</p>}
 
-                <label>Confirm Password</label>
+
                 <input
                     type="password"
                     placeholder="Confirm new password"

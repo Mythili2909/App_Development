@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../assets/style/Login.css';
+import img from '../assets/images/login img.png';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -8,10 +9,9 @@ function Login() {
         password: ''
     });
 
-    const [errors, setErrors] = useState({
-        email: '',
-        password: ''
-    });
+    const [errors, setErrors] = useState({});
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,8 +21,7 @@ function Login() {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const validateForm = () => {
         const newErrors = {};
 
         if (!formData.email) {
@@ -37,45 +36,61 @@ function Login() {
             newErrors.password = 'Password must be at least 6 characters';
         }
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        return newErrors;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const validationErrors = validateForm();
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
         } else {
             setErrors({});
             console.log(formData);
-            // Proceed with form submission logic, e.g., API call
+            navigate("/home");
         }
     };
 
     return (
+        <div className="background-wrapper">
         <div className="login-container">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit} className="login-form">
-                <label>Username</label>
-                <input
-                    type="email"
-                    placeholder="Enter your Email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                {errors.email && <p className="error">{errors.email}</p>}
-
-                <label>Password</label>
-                <input
-                    type="password"
-                    placeholder="Enter password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    name="password"
-                />
-                {errors.password && <p className="error">{errors.password}</p>}
-
-                <button type="submit">Login</button>
-                <div className="links">
-                    <p><Link to="/forgot-password">Forgot Password?</Link></p>
-                    <p>Doesn't have an account? <Link to="/register">Sign In</Link></p>
+            <div className="whole">
+                <div className="left-half">
+                    <img src={img} alt="login" />
                 </div>
-            </form>
+                <div className="right-half">
+                    <form onSubmit={handleSubmit} className="login-form">
+                        <h1>Login</h1>
+                        <input
+                            type="email"
+                            placeholder="Enter your Email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className={errors.email ? 'error-input' : ''}
+                        />
+                        {errors.email && <p className="error">{errors.email}</p>}
+
+                        <input
+                            type="password"
+                            placeholder="Enter password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className={errors.password ? 'error-input' : ''}
+                        />
+                        {errors.password && <p className="error">{errors.password}</p>}
+
+                        <button type="submit">Login</button>
+                        <div className="links">
+                            <p><Link to="/forgot-password">Forgot Password?</Link></p>
+                            <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         </div>
     );
 }

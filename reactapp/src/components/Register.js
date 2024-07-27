@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import '../assets/style/Register.css';
+import img from '../assets/images/reg img.png';
+
 function Register() {
     const [formData, setFormData] = useState({
         firstname: '',
         email: '',
         password: '',
-        dob: ''
+        confirmPassword: '',
+        role: '' // Default role set to an empty string
     });
 
     const [errors, setErrors] = useState({
         firstname: '',
         email: '',
         password: '',
-        dob: ''
+        confirmPassword: '',
+        role: '' // Add role error handling
     });
 
     const navigate = useNavigate();
@@ -48,10 +52,14 @@ function Register() {
             newErrors.password = 'Password must contain at least one alphabet';
         }
 
-        if (!formData.dob) {
-            newErrors.dob = 'Date of Birth is required';
-        } else if (new Date(formData.dob) > new Date()) {
-            newErrors.dob = 'Enter the valid DOB';
+        if (!formData.confirmPassword) {
+            newErrors.confirmPassword = 'Confirm Password is required';
+        } else if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords must match';
+        }
+
+        if (!formData.role) {
+            newErrors.role = 'Role is required'; // Error handling for role
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -64,51 +72,63 @@ function Register() {
     };
 
     return (
-        <div>
-            <h1>Sign In</h1>
-            <form onSubmit={handleSubmit}>
-                <label>Firstname </label>
-                <input
-                    type="text"
-                    placeholder="Enter your name"
-                    name="firstname"
-                    value={formData.firstname}
-                    onChange={handleChange}
-                />
-                {errors.firstname && <p style={{ color: 'red' }}>{errors.firstname}</p>}
-                
-                <label>Email </label>
-                <input
-                    type="email"
-                    placeholder="Enter your Email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-
-                <label>Password </label>
-                <input
-                    type="password"
-                    placeholder="Enter password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
-                {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-
-                <label>DOB </label>
-                <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleChange}
-                />
-                {errors.dob && <p style={{ color: 'red' }}>{errors.dob}</p>}
-
-                <button type="submit">Sign In</button>
-            <p>Already have an account? <Link to='/login'>Login here</Link></p>
-            </form>
+        <div className="background-wrapper">
+            <div className="login-container">
+                <div className="whole">
+                    <div className="left-half">
+                        <img src={img} alt="register" />
+                    </div>
+                    <div className="right-half">
+                        <form onSubmit={handleSubmit} className="login-form">
+                            <h1>Register</h1>
+                            <input
+                                type="text"
+                                placeholder="Username"
+                                name="firstname"
+                                value={formData.firstname}
+                                onChange={handleChange}
+                            />
+                            {errors.firstname && <p className="error">{errors.firstname}</p>}
+                            <input
+                                type="email"
+                                placeholder="E-mail address"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                            {errors.email && <p className="error">{errors.email}</p>}
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                            />
+                            {errors.password && <p className="error">{errors.password}</p>}
+                            <input
+                                type="password"
+                                placeholder="Confirm password"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
+                            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+                            <select
+                                name="role"
+                                value={formData.role}
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled>Select Role</option>
+                                <option value="Coder">Coder</option>
+                                <option value="Interviewer">Interviewer</option>
+                            </select>
+                            {errors.role && <p className="error">{errors.role}</p>} {/* Display role error */}
+                            <button type="submit">Sign Up</button>
+                            <p>Have an account? <Link to='/login'>Sign In</Link></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
