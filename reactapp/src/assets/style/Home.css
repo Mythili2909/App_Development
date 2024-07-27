@@ -1,3 +1,4 @@
+
 /* Container for Home Page */
 .home-con {
     display: flex;
@@ -111,7 +112,7 @@
 
 /* Heading Styles in content */
 .content h1 {
-    font-size: 2em;
+    font-size: 2.3em;
     margin: 0;
     font-weight: bold;
     background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff); /* Multi-color gradient */
@@ -123,7 +124,7 @@
 
 /* Paragraph Styles in content */
 .content p {
-    font-size: 1.2em;
+    font-size: 1.7em;
     color: #333;
     margin: 10px 0 0 0;
 }
@@ -140,7 +141,7 @@
     display: inline-block;
     padding: 10px 20px;
     margin-top: 20px;
-    font-size: 1em;
+    font-size: 1.5em;
     color: #fff;
     background-color: #007bff;
     border: none;
@@ -169,6 +170,7 @@
     max-width: 45%; /* Ensure cards don't stretch too much */
     text-align: center;
     margin-bottom: 20px;
+    font-size: 1.3em;
 }
 
 .division-icon {
@@ -178,7 +180,7 @@
 }
 
 .division h2 {
-    font-size: 24px; /* Adjust the size as needed */
+    font-size: 1.6em; /* Adjust the size as needed */
     background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff); /* Multi-color gradient */
     background-clip: text;
     -webkit-background-clip: text;
@@ -188,15 +190,15 @@
 }
 
 .division p {
-    font-size: 16px; /* Increase the font size */
-    color: #666;
+    font-size: 1.2em; /* Increase the font size */
+    color: #333;
     line-height: 1.5;
 }
 /* Central Image */
 .central-image {
     position: absolute;
-    width: 100px; /* Adjust size as needed */
-    height: 100px; /* Adjust size as needed */
+    width: 3c00px; /* Adjust size as needed */
+    height: 300px; /* Adjust size as needed */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -217,7 +219,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    animation: rotateAll 20s infinite linear; /* Continuous rotation */
+    /* animation: rotateAll 20s infinite linear; Continuous rotation */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -227,7 +229,7 @@
 .rotating-image {
     position: absolute;
     width: 80px; /* Adjust size as needed */
-    height: 80px; /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */ padding-right: 50px;
 }
 
 /* Ensure images are upright */
@@ -248,7 +250,7 @@
     }
 }
 
-/* Positioning each image in a circular path */
+/* Positioning each image in a circular path
 .rotating-image:nth-child(1) {
     transform: rotate(0deg) translateY(-120px) rotate(0deg);
 }
@@ -263,4 +265,79 @@
 
 .rotating-image:nth-child(4) {
     transform: rotate(270deg) translateY(-120px) rotate(-270deg);
+} */
+.new-content-container {
+    padding: 20px;
+    text-align: center;
 }
+
+.new-content-container h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff); /* Multi-color gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: colorShift 5s infinite linear; /* Multi-color animation */
+}
+
+.new-content-container p {
+    font-size: 25px;
+    color: #333;
+    margin-top: 0;
+    padding-left: 470px;
+    padding-right: 450px;
+}
+
+.company-img {
+    max-width: 100%;
+    height: 600px;
+    width:800px;
+    padding-top: 90px;
+    margin: 20px auto; /* Center and space out */
+    display: block;
+}
+.footer {
+    background-color: #1a1b2e; /* Dark blue background */
+    color: #fff; /* White text color */
+    padding: 20px 0;
+    text-align: center;
+    height: 200px;
+    /* font-size: 30px; */
+    margin-top: 20px; /* Space between footer and previous content */
+}
+
+.footer-links,
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between links */
+    margin-bottom: 15px; /* Space between links and disclaimer */
+    /* font-size: 30px; */
+}
+
+.footer-links a,
+.footer-social a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px; /* Size of the text */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+    padding-top: 30px;
+}
+
+.footer-links a:hover,
+.footer-social a:hover {
+    color: #6c63ff; /* Light purple color on hover */
+}
+
+.footer-social a {
+    font-size: 26px; /* Size of the social media icons */
+}
+
+.footer-disclaimer {
+    font-size: 16px; /* Size of the disclaimer text */
+    /* margin-top: 10px; Space between social icons and disclaimer */
+    padding-top: 20px;
+}
+

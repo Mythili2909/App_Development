@@ -1,42 +1,38 @@
 import React from 'react';
-import '../assets/style/Home.css'; // Import your custom CSS
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import '../assets/style/Home.css';
 import Navbar from './Navbar';
 import img1 from '../assets/images/home img2.jpg';
 import img2 from '../assets/images/home img3.png';
 import img3 from '../assets/images/home img4.png';
 import img4 from '../assets/images/home img5.png';
-import bgImage from '../assets/images/home side img.png'; // Import your new background image
-
-import icon1 from '../assets/images/div img1.png'; // Add your icon images here
+import bgImage from '../assets/images/home side img.png';
+import icon1 from '../assets/images/div img1.png';
 import icon2 from '../assets/images/div img2.png';
 import icon3 from '../assets/images/div img3.png';
 import icon4 from '../assets/images/div img4.png';
-
-import rotateImg1 from '../assets/images/div img4.png'; // Add your rotating images here
-import rotateImg2 from '../assets/images/div img1.png';
-import rotateImg3 from '../assets/images/div img2.png';
-import rotateImg4 from '../assets/images/div img3.png';
-
-import centralImg from '../assets/images/div img3.png'; // Import the central image
+import centralImg from '../assets/images/center img.png';
+import companyImg from '../assets/images/company.png';
 
 function Home() {
     React.useEffect(() => {
         const options = {
-            root: null, // Use the viewport as the container
+            root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Trigger when 10% of the element is visible
+            threshold: 0.1
         };
 
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible'); // Add the class to trigger the CSS transition
-                    observer.unobserve(entry.target); // Stop observing once the element is visible
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
         }, options);
 
-        // Observe all rows and divisions
         document.querySelectorAll('.row, .division').forEach(element => {
             observer.observe(element);
         });
@@ -52,7 +48,7 @@ function Home() {
                 <div className="home-content-container">
                     <div className="home-container">
                         <h1 className="home-text">Explore here!</h1>
-                        <a href="#learn-more" className="home-button">Create Account</a>
+                        <Link to="/register" className="home-button">Create Account</Link>
                     </div>
                 </div>
                 <div className="custom-shape-divider-bottom-1721975298">
@@ -100,7 +96,6 @@ function Home() {
                 </div>
             </div>
 
-            {/* New Section with Four Divisions */}
             <div className="four-divisions-container">
                 <div className="division">
                     <img src={icon1} alt="Icon 1" className="division-icon" />
@@ -124,24 +119,41 @@ function Home() {
                 </div>
             </div>
 
-            {/* Rotating Images Section */}
             <div className="rotating-images-container">
                 <img src={centralImg} alt="Central Image" className="central-image" />
-                <div className="rotating-images-wrapper">
-                    <div className="rotating-image">
-                        <img src={rotateImg1} alt="Rotating Image 1" />
-                    </div>
-                    <div className="rotating-image">
-                        <img src={rotateImg2} alt="Rotating Image 2" />
-                    </div>
-                    <div className="rotating-image">
-                        <img src={rotateImg3} alt="Rotating Image 3" />
-                    </div>
-                    <div className="rotating-image">
-                        <img src={rotateImg4} alt="Rotating Image 4" />
-                    </div>
-                </div>
             </div>
+
+            <div className="new-content-container">
+                <h2>Our Promise to You</h2>
+                <p>We're so confident we can get you interview-ready, we're introducing our Get the Job Guarantee. If you don't get the job, we'll give you your money back. Guaranteed.</p>
+                <img src={companyImg} alt="Company" className="company-img" /> {/* Add the company image here */}
+            </div>
+
+            {/* Footer Component */}
+            <footer className="footer">
+                <div className="footer-links">
+                    <a href="#blog">Blog</a>
+                    <a href="#contact">Contact Us</a>
+                    <a href="#faqs">FAQs</a>
+                    <a href="#support">Support & How-To Videos</a>
+                    <a href="#terms">Terms</a>
+                    <a href="#privacy">Privacy</a>
+                </div>
+                <div className="footer-social">
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faFacebook} />
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faInstagram} />
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faLinkedin} />
+                    </a>
+                </div>
+                <p className="footer-disclaimer">
+                    © 2024 Intervue Hub, All Rights Reserved. | 1632 1st Avenue #21030, New York, NY 10028
+                </p>
+            </footer>
         </div>
     );
 }
