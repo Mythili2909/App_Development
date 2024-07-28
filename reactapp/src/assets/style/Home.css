@@ -9,7 +9,7 @@
 
 /* Parent Container with Background Image */
 .home-parent-container {
-    background-image: url('https://wallpaperaccess.com/full/1732235.jpg');
+    background-image: url('C:\Users\91739\Desktop\App\App_Development\reactapp\src\assets\images\bg img.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -340,4 +340,3 @@
     /* margin-top: 10px; Space between social icons and disclaimer */
     padding-top: 20px;
 }
-

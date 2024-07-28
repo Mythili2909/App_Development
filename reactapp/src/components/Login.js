@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import '../assets/style/Login.css';
 import img from '../assets/images/login img.png';
+import '../assets/style/Login.css';
+import Navbar from "./Navbar";
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ function Login() {
                 navigate("/admin-dashboard");
             } else if (email === 'Interviewer@gmail.com' && password === 'Interviewer@123') {
                 navigate("/interviewer-dashboard");
-            } else if (email === 'Coder@gmail.com' && password === 'Coder@123') {
+            } else if (email === 'Coder@gmail.com' && password === 'Coder@12345') {
                 navigate("/coder-dashboard");
             } else {
                 setErrors({ email: 'Invalid email or password' });
@@ -65,6 +66,7 @@ function Login() {
 
     return (
         <div className="background-wrapper">
+            <Navbar/>
             <div className="login-container">
                 <div className="whole">
                     <div className="left-half">

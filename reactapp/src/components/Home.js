@@ -1,20 +1,20 @@
+import { faFacebook, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import '../assets/style/Home.css';
-import Navbar from './Navbar';
+import centralImg from '../assets/images/center img.png';
+import companyImg from '../assets/images/company.png';
+import icon1 from '../assets/images/div img1.png';
+import icon2 from '../assets/images/div img2.png';
+import icon3 from '../assets/images/div img3.png';
+import icon4 from '../assets/images/div img4.png';
 import img1 from '../assets/images/home img2.jpg';
 import img2 from '../assets/images/home img3.png';
 import img3 from '../assets/images/home img4.png';
 import img4 from '../assets/images/home img5.png';
 import bgImage from '../assets/images/home side img.png';
-import icon1 from '../assets/images/div img1.png';
-import icon2 from '../assets/images/div img2.png';
-import icon3 from '../assets/images/div img3.png';
-import icon4 from '../assets/images/div img4.png';
-import centralImg from '../assets/images/center img.png';
-import companyImg from '../assets/images/company.png';
+import '../assets/style/Home.css';
+import Navbar from './Navbar';
 
 function Home() {
     React.useEffect(() => {

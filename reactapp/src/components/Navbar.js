@@ -19,6 +19,9 @@ function Navbar() {
                 <li><Link to="/dashboard">Dashboard</Link></li> */}
                 <li><Link to="/login">Login</Link></li>
                 <li><Link to="/theme">Theme</Link></li>
+                {/* <li><Link to="/videorec">Video</Link></li> */}
+                {/* <li><Link to="/dashboard">Dashboard</Link></li>
+                <li><Link to="/profile">Profile</Link></li> */}
                 {/* <li><Link to="/register">Register</Link></li> */}
                 {/* <li><Link to="/profile"><FontAwesomeIcon className="profile-icon" icon={faUserCircle} /></Link></li> */}
                 

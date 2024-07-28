@@ -9,13 +9,16 @@ import Home from './components/Home';
 // import Notifications from './components/Notifications';
 // import Profile from './components/Profile';
 // import Dashboard from './components/Dashboard';
-import Navbar from './components/Navbar'; // Uncommented Navbar import
+// import Navbar from './components/Navbar'; // Uncommented Navbar import
 import Admin from './components/Admin';
+import Coder from './components/Coder';
+import Interviewer from './components/Interviewer';
+import VideoRec from './components/VideoRec';
 
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      {/* <Navbar /> */}
       {/* <Login /> */}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -26,7 +29,9 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/notification" element={<Notifications />} />
         <Route path="/profile" element={<Profile />} /> */}
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/practice-sessions" element={<VideoRec />} /> 
+        <Route path="/interviewer-dashboard" element={<Interviewer/>} />
+        <Route path="/coder-dashboard" element={<Coder/>} />
         <Route path="/admin-dashboard" element={<Admin />} />
       </Routes>
     </div>
