@@ -4,6 +4,17 @@
     padding: 0;
 } */
 
+/* Default Light Theme */
+.nav-1-container {
+    display: flex;
+    align-items: center;
+    background-color: #fff; /* Light theme background color */
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the navbar */
+    transition: background-color 0.3s ease;
+}
+
+
 .navbar {
     position: fixed; 
     top: 0; 

@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    animation: fadeInPage 2s ease-in-out; /* Animation for the Home page */
+    animation: fadeInPage 1s ease-in-out; /* Animation for the Home page */
 }
 
 /* Parent Container with Background Image */

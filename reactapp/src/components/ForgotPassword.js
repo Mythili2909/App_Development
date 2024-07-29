@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import '../assets/style/ForgotPassword.css';
+import img from '../assets/images/Reset Password.jpeg';
 
 function ForgotPassword() {
     const [formData, setFormData] = useState({
@@ -52,34 +53,43 @@ function ForgotPassword() {
     };
 
     return (
-        <div className="forgot-password-container">
-            <h1>Reset Password</h1>
-            <form onSubmit={handleSubmit} className="forgot-password-form">
- 
-                <input
-                    type="password"
-                    placeholder="Enter new password"
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                />
-                {errors.newPassword && <p className="error">{errors.newPassword}</p>}
+        <div className="background-wrapper-for">
+            <div className="forgot-password-container">
+                <div className="left-half-for">
+                    <img src={img} alt="Reset Password" />
+                </div>
+                <div className="right-half-for">
+                    <h1>Reset Password</h1>
+                    <form onSubmit={handleSubmit} className="forgot-password-form">
+                        <label htmlFor="newPassword">New Password</label>
+                        <input
+                            type="password"
+                            id="newPassword"
+                            placeholder="Enter new password"
+                            name="newPassword"
+                            value={formData.newPassword}
+                            onChange={handleChange}
+                        />
+                        {errors.newPassword && <p className="error">{errors.newPassword}</p>}
 
+                        <label htmlFor="confirmPassword">Confirm Password</label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm new password"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                        />
+                        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
 
-                <input
-                    type="password"
-                    placeholder="Confirm new password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                />
-                {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-
-                <button type="button" onClick={handleSubmit}>
-                    Confirm
-                </button>
-                <p>Remembered your password? <Link to="/login">Login</Link></p>
-            </form>
+                        <button type="submit">
+                            Confirm
+                        </button>
+                        <p>Remembered your password? <Link to="/login">Login</Link></p>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 }

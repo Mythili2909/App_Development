@@ -4,6 +4,7 @@ import '../assets/style/Navbar.css'; // Ensure the path is correct
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 // import { faUserCircle } from '@fortawesome/free-solid-svg-icons'; // Import specific icon
 import logo from '../assets/images/interview logo.png'
+import Theme from "./Theme";
 
 function Navbar() {
     return (
@@ -19,6 +20,7 @@ function Navbar() {
                 <li><Link to="/dashboard">Dashboard</Link></li> */}
                 <li><Link to="/login">Login</Link></li>
                 <li><Link to="/theme">Theme</Link></li>
+                {/* <li><Theme /></li> */}
                 {/* <li><Link to="/videorec">Video</Link></li> */}
                 {/* <li><Link to="/dashboard">Dashboard</Link></li>
                 <li><Link to="/profile">Profile</Link></li> */}

@@ -47,7 +47,7 @@ function Home() {
                 </div>
                 <div className="home-content-container">
                     <div className="home-container">
-                        <h1 className="home-text">Explore here!</h1>
+                        <h1 className="home-text">Ace Your Interviews with us!</h1>
                         <Link to="/register" className="home-button">Create Account</Link>
                     </div>
                 </div>
