@@ -1,8 +1,5 @@
 package com.mockinterview.mockinterview.repository;
 
-public interface Repository {
-
-    
-
+public interface SheduledInterviewsRepository {
     
 }

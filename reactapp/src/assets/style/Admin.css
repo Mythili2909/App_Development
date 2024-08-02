@@ -1,344 +1,117 @@
-/* Admin Dashboard Layout */
-.admin-dashboard {
+/* Basic CSS for Admin Dashboard */
+
+.admin {
   display: flex;
   height: 100vh;
-  background-size: cover;
-  background-position: center;
 }
 
-/* Sidebar */
 .sidebar {
-  width: 200px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 105vh;
-  /* width:160px; */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-
-/* 
   width: 250px;
   background-color: #2c3e50;
-  color: #ecf0f1;
+  color: white;
+  height: 100%;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  position: fixed;
-  height: 100%; */
 }
 
-.admin-profile-sidebar {
-  text-align: center;
-}
-
-.admin-image {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-top: 80px; /* Increased margin-top to move the image down */
-  }
-  
-.sidebar h2 {
+.profile-icon {
   font-size: 24px;
   margin-bottom: 20px;
-  margin-top: 10px; /* Added to ensure alignment */
 }
 
-.sidebar-menu {
-  list-style-type: none;
+.sidebar ul {
+  list-style: none;
   padding: 0;
-  width: 100%;
-  margin-top: 20px;
 }
 
-.sidebar-menu li {
-  padding: 15px;
-  width: 100%;
-  text-align: center;
+.sidebar ul li {
+  padding: 10px 0;
   cursor: pointer;
-  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
 }
 
-.sidebar-menu li:hover {
-  background-color: #444;
-  color: #fff;
+.sidebar ul li:hover {
+  background-color: #34495e;
 }
 
 .sidebar ul li svg {
   margin-right: 10px;
 }
 
-.sidebar .logout-button {
-  margin-top: auto;
-  padding: 10px 20px;
-  background-color: #e74c3c;
-  color: #ecf0f1;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar .logout-button:hover {
-  background-color: #c0392b;
-}
-
-/* Admin Content */
-.admin-content {
-  margin-left: 250px;
+.content {
+  flex: 1;
   padding: 20px;
-  width: calc(100% - 250px);
-  overflow-y: auto;
-  height: 100vh;
-}
-.admin-section{
-    width: 30%;
 }
 
-.admin-section h2 {
-  font-size: 28px;
+.profile, .statistics, .schedules, .interviewers, .coders, .add-user, .reports {
   margin-bottom: 20px;
-  color: #032455;
-  /* width: 50%; */
-}
-
-.admin-profile {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 400px;
-}
-
-.admin-profile p,
-.admin-profile input {
-  font-size: 18px;
-  margin: 5px 0;
-}
-
-.admin-profile input {
-  padding: 10px;
-  border: 1px solid #bdc3c7;
-  border-radius: 4px;
-}
-
-/* Buttons */
-.admin-profile button,
-.card-actions button {
-  padding: 10px 15px;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.admin-profile button {
-  background-color: #3498db;
-  color: #ecf0f1;
-}
-
-.admin-profile button:hover {
-  background-color: #2980b9;
-}
-
-.edit-button {
-  background-color: #043c3f;
-  color: #ecf0f1;
-}
-
-.edit-button:hover {
-  background-color: #e67e22;
-}
-
-.delete-button {
-  background-color: #064d80;
-  color: #ecf0f1;
-}
-
-.delete-button:hover {
-  background-color: #c0392b;
-}
-
-/* Cards */
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  /* color: #27ae60; */
-  /* font-family: 'Times New Roman', Times, serif; */
 }
 
 .card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background-color: #ecf0f1;
   padding: 20px;
-  /* color: #070707; */
-  /* f */
-  /* color: #070707; */
-  width: 300px;
-  font-family: 'Times New Roman', Times, serif;
-  /* color: #27ae60; */
-  background-color: #02335014;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-right: 10px;
+  width: calc(33% - 10px);
+  float: left;
 }
 
 .card h3 {
-  font-size: 22px;
-  color: #2c3e50;
+  margin: 0;
 }
 
 .card p {
-  font-size: 16px;
-  color: #7f8c8d;
-  margin: 5px 0;
+  font-size: 24px;
+  margin: 10px 0 0;
 }
 
-.card-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-/* Schedule Cards */
-.schedule-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.schedule-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-  width: 300px;
-  background-color: #02335014;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.schedule-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}/* Add User Form */
-.add-user-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 150px; /* Reduced width of the form */
-    margin: 0 auto; /* Center the form */
-  }
-  
-  .add-user-form input,
-  .add-user-form select,
-  .add-user-form button {
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    width: 100%; /* Ensure the input elements take the full width of the form */
-  }
-  
-  .add-user-form button {
-    background-color: #2ecc71;
-    color: #ecf0f1;
-    border: none;
-  }
-  
-  .add-user-form button:hover {
-    background-color: #27ae60;
-  }
-  
-.reminders-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  list-style-type: none;
-  padding: 0;
-}
-
-.reminders-list li {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  width: calc(50% - 20px); /* Two cards per row */
-}
-
-.reminders-list li:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Reminder Cards */
-.reminder-card {
-  background-color: #02335014;
-  color: #2c3e50;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.reminder-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.reminder-card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.reminder-card p {
-  font-size: 16px;
-}
-
-/* Statistics Card */
-.statistics-card {
-  background-color: #02335014;
-  color: #ecf0f1;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 20px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.statistics-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.statistics-card h3 {
-  font-size: 22px;
-  margin: 10px 0;
-}
-
-/* Additional Styles for User Statistics */
-.user-statistics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+.table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 20px;
 }
 
-.user-statistics .statistics-card {
-  flex: 1;
-  min-width: 300px;
-  background-color: #3498db;
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-.user-statistics .statistics-card h3 {
-  font-size: 26px;
+.table th {
+  background-color: #f4f4f4;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #2980b9;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3498db;
 }

@@ -4,7 +4,7 @@ import '../assets/style/Navbar.css'; // Ensure the path is correct
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 // import { faUserCircle } from '@fortawesome/free-solid-svg-icons'; // Import specific icon
 import logo from '../assets/images/interview logo.png'
-import Theme from "./Theme";
+// import Theme from "./Theme";
 
 function Navbar() {
     return (
