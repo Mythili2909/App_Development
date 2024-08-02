@@ -70,6 +70,6 @@ public class AdminController {
 
     @GetMapping("/heads/department/{dept}")
     public List<Head> getHeadsByDept(@PathVariable String dept) {
-        return adminService.getHeadsByDept(dept);
+        return  adminService.getHeadsByDept(dept);
     }
 }

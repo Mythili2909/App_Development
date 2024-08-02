@@ -6,48 +6,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/interviews")
+@RequestMapping("/api/interviews")
 public class InterviewController {
-
     @Autowired
     private InterviewService interviewService;
 
-    @GetMapping
-    public List<Interview> getAllInterviews() {
-        return interviewService.getAllInterviews();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Interview> getInterviewById(@PathVariable Long id) {
-        Optional<Interview> interview = interviewService.getInterviewById(id);
-        return interview.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @PostMapping
-    public Interview createInterview(@RequestBody Interview interview) {
-        return interviewService.saveInterview(interview);
+    public ResponseEntity<Interview> addInterview(@RequestBody Interview interview) {
+        return ResponseEntity.ok(interviewService.addInterview(interview));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Interview> updateInterview(@PathVariable Long id, @RequestBody Interview interview) {
-        if (!interviewService.getInterviewById(id).isPresent()) {
+    public ResponseEntity<Interview> updateInterview(@PathVariable Long id, @RequestBody Interview interviewDetails) {
+        Interview updatedInterview = interviewService.updateInterview(id, interviewDetails);
+        if (updatedInterview != null) {
+            return ResponseEntity.ok(updatedInterview);
+        } else {
             return ResponseEntity.notFound().build();
         }
-        interview.setId(id);
-        Interview updatedInterview = interviewService.saveInterview(interview);
-        return ResponseEntity.ok(updatedInterview);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInterview(@PathVariable Long id) {
-        if (!interviewService.getInterviewById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
         interviewService.deleteInterview(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/title/{title}")
+    public ResponseEntity<List<Interview>> getInterviewsByTitle(@PathVariable String title) {
+        return ResponseEntity.ok(interviewService.getInterviewsByTitle(title));
+    }
+
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Interview>> getInterviewsByType(@PathVariable String type) {
+        return ResponseEntity.ok(interviewService.getInterviewsByType(type));
+    }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<Interview>> getUpcomingInterviews() {
+        return ResponseEntity.ok(interviewService.getUpcomingInterviews(LocalDate.now()));
+    }
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<Interview>> getInterviewsByStudentId(@PathVariable Long studentId) {
+        return ResponseEntity.ok(interviewService.getInterviewsByStudentId(studentId));
+    }
+
+    @GetMapping("/interviewer/{interviewerId}")
+    public ResponseEntity<List<Interview>> getInterviewsByInterviewerId(@PathVariable Long interviewerId) {
+        return ResponseEntity.ok(interviewService.getInterviewsByInterviewerId(interviewerId));
     }
 }
