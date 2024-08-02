@@ -1,12 +1,29 @@
 package com.mockinterview.mockinterview.repository;
+// package com.mockinterview.backend.repository;
 
-import com.mockinterview.mockinterview.model.StudentModel;
+import com.mockinterview.mockinterview.model.Mentor;
+import com.mockinterview.mockinterview.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
-@Repository
-public interface StudentRepository extends JpaRepository<StudentModel, Long> {
-    Optional<StudentModel> findByStudentEmail(String email);
+public interface StudentRepository extends JpaRepository<Student, Long> {
+    List<Student> findByEmail(String email);
+
+    List<Student> findByDept(String dept);
+
+    List<Student> findBySection(String section);
+
+    List<Student> findByRatings(double ratings);
+
+    List<Student> findByBatch(String batch);
+
+    List<Student> findByDeptAndBatchAndSection(String dept, String batch, String section);
+
+    List<Student> findByMentor(Mentor mentor);
+    List<Student> findByDeptAndBatch(String dept, String batch);
+    
 }
+
+
+

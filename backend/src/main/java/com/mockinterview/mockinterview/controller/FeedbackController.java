@@ -1,5 +1,5 @@
 package com.mockinterview.mockinterview.controller;
 
-public class SheduledInterviewsController {
+public class FeedbackController {
     
 }
