@@ -1,0 +1,185 @@
+/* Mentor.css */
+
+.mentor {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd;
+  }
+  
+  .profile-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-icon .faUser {
+    font-size: 3rem;
+    color: #fff;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 10px;
+    cursor: pointer;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
+  
+  li:hover {
+    background-color: #34495e;
+  }
+  
+  li .faUser,
+  li .faCalendarAlt,
+  li .faUsers,
+  li .faSignOutAlt {
+    margin-right: 10px;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .welcome {
+    text-align: center;
+  }
+  
+  .profile {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .profile h2 {
+    text-align: center;
+  }
+  
+  .profile form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .interviews {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .interviews table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .interviews th, .interviews td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .interviews th {
+    background-color: #f2f2f2;
+  }
+  
+  .students {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .students table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .students th, .students td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .students th {
+    background-color: #f2f2f2;
+  }
+  
+  .students .student-photo {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  
+  .table .faEdit, .table .faTrash {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .table .faEdit:hover, .table .faTrash:hover {
+    color: #007bff;
+  }
+  
+
+  .add-student {
+    margin-bottom: 20px;
+  }
+  
+  .add-student input {
+    display: block;
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 100%;
+  }
+  
+  .add-student button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-student button:hover {
+    background-color: #0056b3;
+  }
+  

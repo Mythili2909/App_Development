@@ -17,8 +17,13 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
     List<Interview> findByInterviewer(Interviewer interviewer);
     Optional<Interview> findById(Long id);
     List<Interview> findByTitle(String title);
-    List<Interview> findByType(String type);
+    // List<Interview> findByType(String type);
     List<Interview> findByScheduleDateAfter(LocalDate date);
     List<Interview> findByStudentId(Long studentId);
     List<Interview> findByInterviewerId(Long interviewerId);
+    // List<Interview> findByScheduleTime(LocalTime time);
+
+    // New methods
+    List<Interview> findByRoundName(String roundname);
+    void deleteByRoundName(String roundname);
 }

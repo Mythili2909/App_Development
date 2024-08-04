@@ -1,6 +1,4 @@
 package com.mockinterview.mockinterview.controller;
-// package com.mockinterview.backend.controller;
-
 import com.mockinterview.mockinterview.model.Question;
 import com.mockinterview.mockinterview.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +37,10 @@ public class QuestionController {
     @GetMapping("/interview/{interviewId}")
     public ResponseEntity<List<Question>> getQuestionsByInterviewId(@PathVariable Long interviewId) {
         return ResponseEntity.ok(questionService.getQuestionsByInterviewId(interviewId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Question>> getAllQuestions() {
+        return ResponseEntity.ok(questionService.getAllQuestions());
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,11 @@ public class InterviewService {
 
     public Interview addInterview(Interview interview) {
         // Save the interview
+        interview.setScheduleTime(interview.getScheduleTime().truncatedTo(ChronoUnit.MINUTES));
         Interview savedInterview = interviewRepository.save(interview);
         
         // Save each question and set its interview reference
-        for (Question question : interview.Questions()) {
+        for (Question question : interview.getQuestions()) {
             question.setInterview(savedInterview);
             questionRepository.save(question);
         }
@@ -38,9 +41,9 @@ public class InterviewService {
             Interview interview = optionalInterview.get();
             interview.setTitle(interviewDetails.getTitle());
             interview.setDescription(interviewDetails.getDescription());
-            interview.setType(interviewDetails.getType());
+            interview.setRoundName(interviewDetails.getRoundName());
             interview.setScheduleDate(interviewDetails.getScheduleDate());
-            interview.setScheduleTime(interviewDetails.getScheduleTime());
+            interview.setScheduleTime(interviewDetails.getScheduleTime().truncatedTo(ChronoUnit.MINUTES));
             
             // Update questions
             for (Question question : interviewDetails.getQuestions()) {
@@ -62,8 +65,8 @@ public class InterviewService {
         return interviewRepository.findByTitle(title);
     }
 
-    public List<Interview> getInterviewsByType(String type) {
-        return interviewRepository.findByType(type);
+    public List<Interview> getInterviewsByRoundName(String roundName) {
+        return interviewRepository.findByRoundName(roundName);
     }
 
     public List<Interview> getUpcomingInterviews(LocalDate date) {
@@ -76,5 +79,63 @@ public class InterviewService {
 
     public List<Interview> getInterviewsByInterviewerId(Long interviewerId) {
         return interviewRepository.findByInterviewerId(interviewerId);
+    }
+
+    public List<Interview> getAllInterviews() {
+        return interviewRepository.findAll();
+    }
+
+    public List<Interview> getInterviewsByScheduleDate(LocalDate date) {
+        return interviewRepository.findByScheduleDate(date);
+    }
+
+    public List<Interview> getInterviewsByScheduleTime(LocalTime scheduleTime) {
+        return interviewRepository.findByScheduleTime(scheduleTime);
+    }
+
+    public Interview updateInterviewByDate(LocalDate date, Interview interviewDetails) {
+        List<Interview> interviews = interviewRepository.findByScheduleDate(date);
+        if (!interviews.isEmpty()) {
+            Interview interview = interviews.get(0); // Assuming date is unique
+            interview.setTitle(interviewDetails.getTitle());
+            interview.setDescription(interviewDetails.getDescription());
+            interview.setRoundName(interviewDetails.getRoundName());
+            interview.setScheduleDate(interviewDetails.getScheduleDate());
+            interview.setScheduleTime(interviewDetails.getScheduleTime());
+            
+            // Update questions
+            for (Question question : interviewDetails.getQuestions()) {
+                question.setInterview(interview);
+                questionRepository.save(question);
+            }
+            
+            return interviewRepository.save(interview);
+        }
+        return null;
+    }
+
+    public Interview updateInterviewByRoundName(String roundName, Interview interviewDetails) {
+        List<Interview> interviews = interviewRepository.findByRoundName(roundName);
+        if (!interviews.isEmpty()) {
+            Interview interview = interviews.get(0); // Assuming roundName is unique
+            interview.setTitle(interviewDetails.getTitle());
+            interview.setDescription(interviewDetails.getDescription());
+            interview.setRoundName(interviewDetails.getRoundName());
+            interview.setScheduleDate(interviewDetails.getScheduleDate());
+            interview.setScheduleTime(interviewDetails.getScheduleTime());
+            
+            // Update questions
+            for (Question question : interviewDetails.getQuestions()) {
+                question.setInterview(interview);
+                questionRepository.save(question);
+            }
+            
+            return interviewRepository.save(interview);
+        }
+        return null;
+    }
+
+    public void deleteInterviewsByRoundName(String roundName) {
+        interviewRepository.deleteByRoundName(roundName);
     }
 }

@@ -30,7 +30,6 @@ public class InterviewerService {
         return interviewerRepository.save(interviewer);
     }
     
-
     public Interviewer updateInterviewer(Long id, Interviewer interviewerDetails) {
         Optional<Interviewer> optionalInterviewer = interviewerRepository.findById(id);
         if (optionalInterviewer.isPresent()) {
@@ -38,9 +37,10 @@ public class InterviewerService {
             interviewer.setName(interviewerDetails.getName());
             interviewer.setEmail(interviewerDetails.getEmail());
             interviewer.setPhoto(interviewerDetails.getPhoto());
+            interviewer.setPassword(interviewerDetails.getPassword());
             return interviewerRepository.save(interviewer);
         } else {
-            return null; // Handle interviewer not found case
+            return null;
         }
     }
 
@@ -56,13 +56,21 @@ public class InterviewerService {
         return interviewerRepository.findById(id);
     }
 
+    public List<Interviewer> getInterviewersByName(String name) {
+        return interviewerRepository.findByName(name);
+    }
+
+    public List<Interviewer> getInterviewersByEmail(String email) {
+        return interviewerRepository.findByEmail(email);
+    }
+
     public Interview createInterview(Long interviewerId, Interview interview) {
         Optional<Interviewer> optionalInterviewer = interviewerRepository.findById(interviewerId);
         if (optionalInterviewer.isPresent()) {
             interview.setInterviewer(optionalInterviewer.get());
             return interviewRepository.save(interview);
         } else {
-            return null; // Handle interviewer not found case
+            return null;
         }
     }
 
@@ -72,22 +80,12 @@ public class InterviewerService {
             feedback.setInterviewer(optionalInterviewer.get());
             return feedbackRepository.save(feedback);
         } else {
-            return null; // Handle interviewer not found case
+            return null;
         }
     }
 
-    public List<Student> getStudentsByBatch(String batch) {
-        return studentRepository.findByBatch(batch);
-    }
-
-    public List<Student> getStudentsByBatchAndDept(String batch, String dept) {
-        return studentRepository.findByBatchAndDept(batch, dept);
-    }
-
-    public List<Student> getStudentsByClass(String className) {
-        return studentRepository.findAll().stream()
-                .filter(student -> student.getSection().equalsIgnoreCase(className))
-                .collect(Collectors.toList());
+    public List<Student> getStudentsByDept(String dept) {
+        return studentRepository.findByDept(dept);
     }
 
     public List<Student> getAllStudents() {
@@ -95,7 +93,6 @@ public class InterviewerService {
     }
 
     public List<Mentor> getAllMentors() {
-        // Add Mentor repository and implement accordingly
         return mentorRepository.findAll();
     }
 }

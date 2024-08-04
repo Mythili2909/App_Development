@@ -1,12 +1,7 @@
 package com.mockinterview.mockinterview.service;
-// package com.mockinterview.backend.service;
 
-import com.mockinterview.mockinterview.model.Head;
-import com.mockinterview.mockinterview.model.Mentor;
-import com.mockinterview.mockinterview.model.Student;
-import com.mockinterview.mockinterview.repository.HeadRepository;
-import com.mockinterview.mockinterview.repository.MentorRepository;
-import com.mockinterview.mockinterview.repository.StudentRepository;
+import com.mockinterview.mockinterview.model.*;
+import com.mockinterview.mockinterview.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +21,17 @@ public class AdminService {
     @Autowired
     private HeadRepository headRepository;
 
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
+    private InterviewRepository interviewRepository; // Assuming this exists
+
+    @Autowired
+    private InterviewerRepository interviewerRepository; // Assuming this exists
+
     // Get all students grouped by department
-    public Map<String, List<Student>> getStudentsByDepartment() {
+    public Map<String, List<Student>> getStudentsByDept() {
         List<Student> students = studentRepository.findAll();
         return students.stream()
                 .collect(Collectors.groupingBy(Student::getDept));
@@ -37,7 +41,14 @@ public class AdminService {
     public List<Student> getStudentsByDept(String dept) {
         return studentRepository.findByDept(dept);
     }
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
 
+    public List<Interviewer> getAllInterviewers() {
+        return interviewerRepository.findAll();
+    }
+    
     // Get all students grouped by department and batch
     public Map<String, Map<String, List<Student>>> getStudentsByDeptAndBatch() {
         List<Student> students = studentRepository.findAll();
@@ -70,6 +81,17 @@ public class AdminService {
         return mentorRepository.findAll();
     }
 
+    // Get mentor by email
+    public Mentor getMentorByEmail(String email) {
+        List<Mentor> mentors = mentorRepository.findByEmail(email);
+        return mentors.isEmpty() ? null : mentors.get(0); // Handle case if no mentor is found
+    }
+
+    // Get mentors by department and section
+    // public List<Mentor> getMentorsByDeptAndclassBeingMentored(String dept, String classBeingMentored) {
+    //     return mentorRepository.findByDeptAndClassBeingMentored(dept, classBeingMentored);
+    // }
+
     // Get mentors by department
     public List<Mentor> getMentorsByDept(String dept) {
         return mentorRepository.findByDept(dept);
@@ -87,7 +109,7 @@ public class AdminService {
 
     // Get heads by department
     public List<Head> getHeadsByDept(String dept) {
-        return headRepository.findByDepartment(dept);
+        return headRepository.findByDept(dept);
     }
 
     // Helper method to calculate overall rating
@@ -99,6 +121,10 @@ public class AdminService {
         }
         return totalRating / students.size();
     }
+
+    // public List<Student> getStudentsByRating(double ratings) {
+    //     return studentRepository.findByRatings(ratings);
+    // }
 
     // DTO for batch, department, and section statistics
     public static class BatchDeptSectionStats {
@@ -126,4 +152,137 @@ public class AdminService {
             this.overallRating = overallRating;
         }
     }
+
+    // CRUD operations for Admin
+    public Admin saveAdmin(Admin admin) {
+        return adminRepository.save(admin);
+    }
+
+    public Admin getAdminById(Long id) {
+        return adminRepository.findById(id).orElse(null);
+    }
+
+    public Admin updateAdmin(Long id, Admin admin) {
+        admin.setId(id);
+        return adminRepository.save(admin);
+    }
+
+    public void deleteAdmin(Long id) {
+        adminRepository.deleteById(id);
+    }
+
+    // CRUD operations for Student
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public Student getStudentById(Long id) {
+        return studentRepository.findById(id).orElse(null);
+    }
+
+    public Student updateStudent(Long id, Student student) {
+        student.setId(id);
+        return studentRepository.save(student);
+    }
+
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
+    public List<Student> getStudentsByRatings(double ratings) {
+        return studentRepository.findByRatingsGreaterThanEqual(ratings);
+    }
+
+    // public List<Student> getStudentsByDeptAndName(String dept, String name) {
+    //     return studentRepository.findByDeptAndName(dept, name);
+    // }
+
+    // public List<Student> getStudentsByDeptAndEmail(String dept, String email) {
+    //     return studentRepository.findByDeptAndEmail(dept, email);
+    // }
+
+    // CRUD operations for Mentor
+    public Mentor saveMentor(Mentor mentor) {
+        return mentorRepository.save(mentor);
+    }
+
+    public Mentor getMentorById(Long id) {
+        return mentorRepository.findById(id).orElse(null);
+    }
+
+    public Mentor updateMentorByName(String name, Mentor mentorDetails) {
+        List<Mentor> mentors = mentorRepository.findByName(name);
+        if (!mentors.isEmpty()) {
+            Mentor mentor = mentors.get(0); // Update the first mentor found or handle as needed
+            mentor.setName(mentorDetails.getName());
+            mentor.setDept(mentorDetails.getDept());
+            mentor.setEmail(mentorDetails.getEmail());
+            return mentorRepository.save(mentor);
+        } else {
+            throw new RuntimeException("Mentor not found with name: " + name);
+        }
+    }
+
+    public Mentor updateMentor(Long id, Mentor mentor) {
+        mentor.setId(id);
+        return mentorRepository.save(mentor);
+    }
+
+    public void deleteMentor(Long id) {
+        mentorRepository.deleteById(id);
+    }
+
+    // CRUD operations for Head
+    public Head saveHead(Head head) {
+        return headRepository.save(head);
+    }
+
+    public Head getHeadById(Long id) {
+        return headRepository.findById(id).orElse(null);
+    }
+
+    public Head updateHead(Long id, Head head) {
+        head.setId(id);
+        return headRepository.save(head);
+    }
+
+    public void deleteHead(Long id) {
+        headRepository.deleteById(id);
+    }
+
+    public void deleteStudentByDeptAndEmail(String dept, String email) {
+        List<Student> students = studentRepository.findByDeptAndEmail(dept, email);
+        if (!students.isEmpty()) {
+            studentRepository.deleteAll(students);
+        } else {
+            throw new RuntimeException("Student not found with department: " + dept + " and email: " + email);
+        }
+    }
+
+    // New methods for Interview and Interviewer
+    public List<Interview> getAllInterviews() {
+        return interviewRepository.findAll();
+    }
+
+    public Interview saveInterview(Interview interview) {
+        return interviewRepository.save(interview);
+    }
+
+    public List<Interviewer> getInterviewerByEmail(String email) {
+        return interviewerRepository.findByEmail(email);
+    }
+
+
+    public List<Mentor> getMentorsByDeptAndclassBeingMentored(String dept, String classBeingMentored) {
+        return mentorRepository.findByDeptAndClassBeingMentored(dept, classBeingMentored);
+    }
+
+    public List<Student> getStudentsByDeptAndName(String dept, String name) {
+        return studentRepository.findByDeptAndName(dept, name);
+    }
+
+    public List<Student> getStudentsByDeptAndEmail(String dept, String email) {
+        return studentRepository.findByDeptAndEmail(dept, email);
+    }
+    
 }

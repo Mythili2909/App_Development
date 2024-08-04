@@ -14,6 +14,7 @@ import Admin from './components/Admin';
 import Coder from './components/Coder';
 import Interviewer from './components/Interviewer';
 import VideoRec from './components/VideoRec';
+import Mentor from './components/Mentor';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/interviewer-dashboard" element={<Interviewer/>} />
         <Route path="/coder-dashboard" element={<Coder/>} />
         <Route path="/admin-dashboard" element={<Admin />} />
+        <Route path="/mentor-dashboard" element={<Mentor />} />
       </Routes>
     </div>
   );

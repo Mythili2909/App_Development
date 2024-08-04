@@ -1,10 +1,11 @@
 package com.mockinterview.mockinterview.model;
-// package com.mockinterview.backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -28,13 +29,18 @@ public class Student {
     private String password;
     private String contact;
     private String photo;
-    private double ratings;
+
+    // @Column(nullable = true) // Allows null values
+    private Double ratings; // Use Double to handle null values
+
     private String dept;
     private String batch;
     private String section;
+    private String registerNo;
 
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "mentorId")
     private Mentor mentor;
 
     @JsonIgnore
@@ -44,6 +50,4 @@ public class Student {
     @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Interview> interviews;
-
-    // Getters and setters
 }

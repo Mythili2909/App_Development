@@ -1,6 +1,6 @@
 package com.mockinterview.mockinterview.model;
-// package com.mockinterview.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,10 +27,15 @@ public class Interview {
     private Long id;
     private String title;
     private String description;
-    private String type;
+    private String roundName;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate scheduleDate;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime scheduleTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL)
     private List<Question> questions;
 
@@ -41,6 +46,4 @@ public class Interview {
     @JsonIgnore
     @ManyToOne
     private Interviewer interviewer;
-
-    
 }

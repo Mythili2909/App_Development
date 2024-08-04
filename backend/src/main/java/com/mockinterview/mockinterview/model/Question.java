@@ -24,7 +24,8 @@ public abstract class Question {
     private Long id;
     private String questionText;
 
-    @JsonIgnore
+   @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "interview_id")
     private Interview interview;
 }

@@ -1,5 +1,4 @@
 package com.mockinterview.mockinterview.model;
-// package com.mockinterview.backend.model;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,11 +23,13 @@ public class Head {
     private Long id;
     private String name;
     private String email;
-    private String department;
+    private String dept;
+    private String password; // Added attribute
+    private String photo;    // Added attribute
 
     @JsonIgnore
     @OneToMany(mappedBy = "head")
     private List<Mentor> mentors;
 
-    // Getters and setters
+    // Getters and setters (if not using Lombok)
 }

@@ -1,14 +1,13 @@
 package com.mockinterview.mockinterview.controller;
-// package com.mockinterview.backend.controller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,19 +27,9 @@ public class MentorController {
         return mentorService.getAllMentors();
     }
 
-    @GetMapping("/{id}")
-    public Mentor getMentorById(@PathVariable Long id) {
-        return mentorService.getMentorById(id);
-    }
-
     @PostMapping
     public Mentor createMentor(@RequestBody Mentor mentor) {
         return mentorService.addMentor(mentor);
-    }
-
-    @PutMapping("/{id}")
-    public Mentor updateMentor(@PathVariable Long id, @RequestBody Mentor mentorDetails) {
-        return mentorService.updateMentor(id, mentorDetails);
     }
 
     @DeleteMapping("/{id}")
@@ -48,9 +37,9 @@ public class MentorController {
         mentorService.deleteMentor(id);
     }
 
-    @GetMapping("/department/{department}")
-    public List<Mentor> getMentorsByDepartment(@PathVariable String department) {
-        return mentorService.getMentorsByDepartment(department);
+    @GetMapping("/department/{dept}")
+    public List<Mentor> getMentorsByDept(@PathVariable String dept) {
+        return mentorService.getMentorsByDept(dept);
     }
 
     @GetMapping("/email/{email}")
@@ -58,8 +47,15 @@ public class MentorController {
         return mentorService.getMentorsByEmail(email);
     }
 
-    @GetMapping("/class/{classBeingMentored}")
-    public List<Mentor> getMentorsByClass(@PathVariable String classBeingMentored) {
-        return mentorService.getMentorsByClass(classBeingMentored);
+    @GetMapping("/dept/{dept}/class/{classBeingMentored}")
+    public List<Mentor> getMentorsByDeptAndClassBeingMentored(@PathVariable String dept, @PathVariable String classBeingMentored) {
+        return mentorService.getMentorsByDeptAndClassBeingMentored(dept, classBeingMentored);
+    }
+
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<Void> deleteMentorByEmail(@PathVariable String email) {
+        System.out.println("Deleting mentor with email: " + email);
+        mentorService.deleteMentorByEmail(email);
+        return ResponseEntity.noContent().build();
     }
 }

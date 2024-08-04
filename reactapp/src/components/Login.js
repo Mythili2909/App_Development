@@ -56,8 +56,12 @@ function Login() {
                 navigate("/admin-dashboard");
             } else if (email === 'Interviewer@gmail.com' && password === 'Interviewer@123') {
                 navigate("/interviewer-dashboard");
-            } else if (email === 'Coder@gmail.com' && password === 'Coder@12345') {
+            } else if (email === 'Coder@gmail.com' && password === 'Coder@123') {
                 navigate("/coder-dashboard");
+            } else if (email === 'Mentor@gmail.com' && password === 'Mentor@123') {
+                navigate("/mentor-dashboard");
+            } else if (email === 'Head@gmail.com' && password === 'Head@123') {
+                navigate("/head-dashboard");
             } else {
                 setErrors({ email: 'Invalid email or password' });
             }

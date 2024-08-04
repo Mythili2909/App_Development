@@ -1,8 +1,8 @@
 package com.mockinterview.mockinterview.controller;
-// package com.mockinterview.backend.controller;
 
 import com.mockinterview.mockinterview.model.*;
 import com.mockinterview.mockinterview.service.InterviewerService;
+import com.mockinterview.mockinterview.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +14,9 @@ import java.util.Optional;
 public class InterviewerController {
     @Autowired
     private InterviewerService interviewerService;
+
+    @Autowired
+    private StudentService studentService;
 
     @PostMapping
     public Interviewer addInterviewer(@RequestBody Interviewer interviewer) {
@@ -55,19 +58,14 @@ public class InterviewerController {
         return interviewerService.getAllStudents();
     }
 
-    @GetMapping("/students/batch/{batch}")
-    public List<Student> getStudentsByBatch(@PathVariable String batch) {
-        return interviewerService.getStudentsByBatch(batch);
+    @GetMapping("/dept/{dept}/section/{section}")
+    public List<Student> getStudentsByDeptAndSection(@PathVariable String dept, @PathVariable String section) {
+        return studentService.getStudentsByDeptAndSection(dept, section);
     }
 
-    @GetMapping("/students/batch/{batch}/dept/{dept}")
-    public List<Student> getStudentsByBatchAndDept(@PathVariable String batch, @PathVariable String dept) {
-        return interviewerService.getStudentsByBatchAndDept(batch, dept);
-    }
-
-    @GetMapping("/students/class/{className}")
-    public List<Student> getStudentsByClass(@PathVariable String className) {
-        return interviewerService.getStudentsByClass(className);
+    @GetMapping("/students/dept/{dept}")
+    public List<Student> getStudentsByDept(@PathVariable String dept) {
+        return interviewerService.getStudentsByDept(dept);
     }
 
     @GetMapping("/mentors")

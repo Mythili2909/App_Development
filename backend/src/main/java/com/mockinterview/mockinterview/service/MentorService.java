@@ -1,17 +1,15 @@
 package com.mockinterview.mockinterview.service;
-// package com.mockinterview.backend.service;
 
-import com.mockinterview.mockinterview.model.Mentor;
-import com.mockinterview.mockinterview.repository.MentorRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.mockinterview.mockinterview.model.Mentor;
+import com.mockinterview.mockinterview.repository.MentorRepository;
 
 @Service
 public class MentorService {
-
 
     @Autowired
     private MentorRepository mentorRepository;
@@ -20,41 +18,37 @@ public class MentorService {
         return mentorRepository.findAll();
     }
 
-    public Mentor getMentorById(Long id) {
-        return mentorRepository.findById(id).orElse(null);
-    }
-
     public Mentor addMentor(Mentor mentor) {
         return mentorRepository.save(mentor);
-    }
-
-    public Mentor updateMentor(Long id, Mentor mentorDetails) {
-        Optional<Mentor> mentorOptional = mentorRepository.findById(id);
-        if (mentorOptional.isPresent()) {
-            Mentor mentor = mentorOptional.get();
-            mentor.setName(mentorDetails.getName());
-            mentor.setEmail(mentorDetails.getEmail());
-            mentor.setDept(mentorDetails.getDept());
-            mentor.setClassBeingMentored(mentorDetails.getClassBeingMentored());
-            mentor.setHead(mentorDetails.getHead());
-            return mentorRepository.save(mentor);
-        }
-        return null;
     }
 
     public void deleteMentor(Long id) {
         mentorRepository.deleteById(id);
     }
 
-    public List<Mentor> getMentorsByDepartment(String department) {
-        return mentorRepository.findByHeadDepartment(department);
-    }
-
     public List<Mentor> getMentorsByEmail(String email) {
         return mentorRepository.findByEmail(email);
     }
 
-    public List<Mentor> getMentorsByClass(String classBeingMentored) {
+    public List<Mentor> getMentorsByDept(String dept) {
+        return mentorRepository.findByDept(dept);
+    }
+
+    public List<Mentor> getMentorsByClassBeingMentored(String classBeingMentored) {
         return mentorRepository.findByClassBeingMentored(classBeingMentored);
+    }
+
+    public List<Mentor> getMentorsByDeptAndClassBeingMentored(String dept, String classBeingMentored) {
+        return mentorRepository.findByDeptAndClassBeingMentored(dept, classBeingMentored);
+    }
+    
+    public void deleteMentorByEmail(String email) {
+        try {
+            System.out.println("Service: Deleting mentor with email: " + email);
+            mentorRepository.deleteByEmail(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Add appropriate error handling here
+        }
     }
 }

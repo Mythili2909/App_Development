@@ -1,8 +1,9 @@
 package com.mockinterview.mockinterview.service;
 
+
+import com.mockinterview.mockinterview.model.Question;
 import com.mockinterview.mockinterview.model.ContentQuestion;
 import com.mockinterview.mockinterview.model.MCQQuestion;
-import com.mockinterview.mockinterview.model.Question;
 import com.mockinterview.mockinterview.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,9 @@ public class QuestionService {
 
     public List<Question> getQuestionsByInterviewId(Long interviewId) {
         return questionRepository.findByInterviewId(interviewId);
+    }
+
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
     }
 }

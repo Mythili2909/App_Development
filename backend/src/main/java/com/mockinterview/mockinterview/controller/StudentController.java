@@ -1,17 +1,8 @@
 package com.mockinterview.mockinterview.controller;
-// package com.mockinterview.backend.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mockinterview.mockinterview.model.Student;
 import com.mockinterview.mockinterview.service.StudentService;
@@ -27,20 +18,22 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id) {
-        return studentService.getStudentById(id);
-    }
-
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
         return studentService.addStudent(student);
     }
+   
 
-    @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
-        return studentService.updateStudent(id, studentDetails);
-    }
+    @PutMapping("/updateByRegisterNo/{registerNo}")
+public Student updateStudentByRegisterNo(@PathVariable String registerNo, @RequestBody Student studentDetails) {
+    return studentService.updateStudentByRegisterNo(registerNo, studentDetails);
+}
+
+@PutMapping("/updateByEmail/{email}")
+public Student updateStudentByEmail(@PathVariable String email, @RequestBody Student studentDetails) {
+    return studentService.updateStudentByEmail(email, studentDetails);
+}
+
 
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
@@ -57,10 +50,10 @@ public class StudentController {
         return studentService.getStudentsByDept(dept);
     }
 
-    @GetMapping("/section/{section}")
-    public List<Student> getStudentsBySection(@PathVariable String section) {
-        return studentService.getStudentsBySection(section);
-    }
+    // @GetMapping("/section/{section}")
+    // public List<Student> getStudentsBySection(@PathVariable String section) {
+    //     return studentService.getStudentsBySection(section);
+    // }
 
     @GetMapping("/ratings/{ratings}")
     public List<Student> getStudentsByRatings(@PathVariable double ratings) {
@@ -70,5 +63,40 @@ public class StudentController {
     @GetMapping("/batch/{batch}")
     public List<Student> getStudentsByBatch(@PathVariable String batch) {
         return studentService.getStudentsByBatch(batch);
+    }
+
+    @GetMapping("/name/{name}")
+    public List<Student> getStudentsByName(@PathVariable String name) {
+        return studentService.getStudentsByName(name);
+    }
+
+    @GetMapping("/dept/{dept}/name/{name}")
+    public List<Student> getStudentsByDeptAndName(@PathVariable String dept, @PathVariable String name) {
+        return studentService.getStudentsByDeptAndName(dept, name);
+    }
+
+    // @GetMapping("/dept/{dept}/id/{id}")
+    // public List<Student> getStudentsByDeptAndId(@PathVariable String dept, @PathVariable Long id) {
+    //     return studentService.getStudentsByDeptAndId(dept, id);
+    // }
+
+    @GetMapping("/dept/{dept}/sec/{sec}")
+    public List<Student> getStudentsByDeptAndSection(@PathVariable String dept, @PathVariable String sec) {
+        return studentService.getStudentsByDeptAndSection(dept, sec);
+    }
+
+    @GetMapping("/registerNo/{registerNo}")
+    public List<Student> getStudentsByRegisterNo(@PathVariable String registerNo) {
+        return studentService.getStudentsByRegisterNo(registerNo);  // New endpoint
+    }
+
+    @DeleteMapping("/name/{name}")
+    public void deleteStudentByName(@PathVariable String name) {
+        studentService.deleteStudentByName(name);
+    }
+
+    @DeleteMapping("/email/{email}")
+    public void deleteStudentByEmail(@PathVariable String email) {
+        studentService.deleteStudentByEmail(email);
     }
 }
