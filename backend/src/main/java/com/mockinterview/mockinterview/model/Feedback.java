@@ -1,8 +1,6 @@
 package com.mockinterview.mockinterview.model;
-// package com.mockinterview.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +23,7 @@ public class Feedback {
     private double relevance;
     private double efficiency;
     private double rating;
-    
+
     @JsonIgnore
     @ManyToOne
     private Student student;
@@ -33,8 +31,4 @@ public class Feedback {
     @JsonIgnore
     @ManyToOne
     private Interviewer interviewer;
-
- 
-
-    // Getters and setters
 }

@@ -1,32 +1,22 @@
+// Interviewer.java
 package com.mockinterview.mockinterview.model;
 
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
+
 @Data
-public class Interviewer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String email;
-    private String photo;
-    private String password; // New field for password
-
-    @JsonIgnore
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Interviewer extends User {
     @OneToMany(mappedBy = "interviewer")
     private List<Feedback> feedbacks;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "interviewer")
     private List<Interview> interviews;
-
-    // Getters and setters
 }

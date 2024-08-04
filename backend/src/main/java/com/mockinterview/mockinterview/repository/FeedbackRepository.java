@@ -1,5 +1,4 @@
 package com.mockinterview.mockinterview.repository;
-// package com.mockinterview.backend.repository;
 
 import java.util.List;
 

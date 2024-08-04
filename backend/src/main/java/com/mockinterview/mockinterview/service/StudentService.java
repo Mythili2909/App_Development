@@ -58,9 +58,7 @@ public class StudentService {
         return studentRepository.findByDept(dept);
     }
 
-    // public List<Student> getStudentsBySection(String section) {
-    //     return studentRepository.findBySection(section);
-    // }
+
 
     public List<Student> getStudentsByRatings(double ratings) {
         return studentRepository.findByRatings(ratings);
