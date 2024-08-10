@@ -21,7 +21,7 @@ public class OpenApiConfig {
                 server.setDescription("App Development");
 
                 Info info = new Info()
-                                .title("MockMate")
+                                .title("IntervueHub")
                                 .version("0.1")
                                 .description("swagger configuration testing.");
 

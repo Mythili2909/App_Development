@@ -1,6 +1,8 @@
+import axios from 'axios';
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../assets/style/Register.css';
+
 import img from '../assets/images/reg img.png';
 
 function Register() {
@@ -9,7 +11,7 @@ function Register() {
         email: '',
         password: '',
         confirmPassword: '',
-        role: '' // Default role set to an empty string
+        roles: '' // Default roles set to an empty string
     });
 
     const [errors, setErrors] = useState({
@@ -17,9 +19,10 @@ function Register() {
         email: '',
         password: '',
         confirmPassword: '',
-        role: '' // Add role error handling
+        roles: '' // Add roles error handling
     });
 
+    const apiurl = "http://127.0.0.1:8080/api/users";
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -30,7 +33,7 @@ function Register() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newErrors = {};
 
@@ -58,16 +61,31 @@ function Register() {
             newErrors.confirmPassword = 'Passwords must match';
         }
 
-        if (!formData.role) {
-            newErrors.role = 'Role is required'; // Error handling for role
+        if (!formData.roles) {
+            newErrors.roles = 'Role is required'; // Error handling for roles
         }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-        } else {
-            setErrors({});
-            console.log(formData);
-            navigate("/login"); // Navigate to login after registration
+            return; // Stop the function here if there are validation errors
+        }
+
+        try {
+            const response = await axios.post(apiurl, {
+                id: 0,
+                firstname: formData.firstname,
+                email: formData.email,
+                password: formData.password,
+                confirmPassword: formData.confirmPassword,
+                roles: formData.roles // Updated field name
+            });
+
+            console.log(response);
+            alert("User created successfully");
+            navigate("/login"); // Navigate to login after successful registration
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong");
         }
     };
 
@@ -87,6 +105,7 @@ function Register() {
                                 name="firstname"
                                 value={formData.firstname}
                                 onChange={handleChange}
+                                className={errors.firstname ? 'error-input' : ''}
                             />
                             {errors.firstname && <p className="error">{errors.firstname}</p>}
                             <input
@@ -95,6 +114,7 @@ function Register() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
+                                className={errors.email ? 'error-input' : ''}
                             />
                             {errors.email && <p className="error">{errors.email}</p>}
                             <input
@@ -103,6 +123,7 @@ function Register() {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                className={errors.password ? 'error-input' : ''}
                             />
                             {errors.password && <p className="error">{errors.password}</p>}
                             <input
@@ -111,18 +132,18 @@ function Register() {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
+                                className={errors.confirmPassword ? 'error-input' : ''}
                             />
                             {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-                            <select
-                                name="role"
-                                value={formData.role}
+                            <input
+                                type="text"
+                                placeholder="Enter your roles"
+                                name="roles"
+                                value={formData.roles}
                                 onChange={handleChange}
-                            >
-                                <option value="" disabled>Select Role</option>
-                                <option value="Coder">Coder</option>
-                                <option value="Interviewer">Interviewer</option>
-                            </select>
-                            {errors.role && <p className="error">{errors.role}</p>} {/* Display role error */}
+                                className={errors.roles ? 'error-input' : ''}
+                            />
+                            {errors.roles && <p className="error">{errors.roles}</p>} {/* Display roles error */}
                             <button type="submit">Sign Up</button>
                             <p>Have an account? <Link to='/login'>Sign In</Link></p>
                         </form>
