@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import '../../assets/style/MentorCss/MentorProfile.css';
+import '../../assets/style/AdminCss/AdminProfile.css';
 import AdminProfileImg from '../../assets/images/admin img.png';
 
-const MentorProfile = () => {
+const InterviewerProfile = () => {
   const [adminData, setAdminData] = useState({
     username: 'admin_user',
     email: 'admin@example.com',
@@ -140,4 +140,4 @@ const MentorProfile = () => {
   );
 };
 
-export default MentorProfile;
+export default InterviewerProfile;

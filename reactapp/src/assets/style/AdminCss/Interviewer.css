@@ -33,7 +33,7 @@
 }
 
 .interviewer-form input {
-  flex: 1 1 200px;
+  flex: 1 1 200px; /* Ensures all input fields have the same minimum width */
   padding: 8px;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -44,7 +44,6 @@
 .interviewer-form input:focus {
   border-color: #007bff;
 }
-
 
 .add-interviewer-button {
   background-color: #02375ab6;
@@ -62,8 +61,6 @@
   background-color: rgb(13, 44, 77);
   transform: scale(1.05);
 }
-
-
 
 .add-interviewer-button:active {
   background-color: #004080;
@@ -115,4 +112,9 @@
 @keyframes slideIn {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { background-color: #02375ab6; }
+  50% { background-color: #004080; }
 }

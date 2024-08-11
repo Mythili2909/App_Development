@@ -11,23 +11,24 @@ function Head() {
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [deptFilter, setDeptFilter] = useState('');
   const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', dept: '' });
   const [editingIndex, setEditingIndex] = useState(null);
-  const [tempData, setTempData] = useState(null); // Temporarily store data during editing
+  const [tempData, setTempData] = useState(null);
 
   const filteredHeads = heads.filter(head =>
-    head.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    head.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (head.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     head.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     head.id.includes(searchTerm)) &&
+    (deptFilter === '' || head.dept === deptFilter)
   );
 
   const handleInputChange = (e, index = null) => {
     if (index !== null) {
-      // Inline editing for table rows
       const updatedHeads = [...heads];
       updatedHeads[index] = { ...updatedHeads[index], [e.target.name]: e.target.value };
       setHeads(updatedHeads);
     } else {
-      // Form input change for adding new head
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
@@ -42,7 +43,6 @@ function Head() {
 
   const handleAddOrEdit = () => {
     if (editingIndex !== null) {
-      // Update existing head
       if (validateFields(formData)) {
         const updatedHeads = [...heads];
         updatedHeads[editingIndex] = formData;
@@ -53,7 +53,6 @@ function Head() {
         alert('Please fill out all required fields.');
       }
     } else {
-      // Add new head
       if (validateFields(formData)) {
         setHeads([...heads, formData]);
         setFormData({ id: '', name: '', email: '', password: '', contact: '', dept: '' });
@@ -64,18 +63,18 @@ function Head() {
   };
 
   const handleEditClick = (index) => {
-    setTempData({ ...heads[index] }); // Save the current data before editing
+    setTempData({ ...heads[index] });
     setEditingIndex(index);
   };
 
   const handleSaveClick = () => {
     setEditingIndex(null);
-    setTempData(null); // Clear temporary data
+    setTempData(null);
   };
 
   const handleCancelClick = () => {
     const updatedHeads = [...heads];
-    updatedHeads[editingIndex] = tempData; // Restore the original data
+    updatedHeads[editingIndex] = tempData;
     setHeads(updatedHeads);
     setEditingIndex(null);
     setTempData(null);
@@ -94,10 +93,21 @@ function Head() {
       <div className="filters">
         <input
           type="text"
-          placeholder="Search heads..."
+          placeholder="Search by ID, Name, or Email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <select
+          value={deptFilter}
+          onChange={(e) => setDeptFilter(e.target.value)}
+        >
+          <option value="">All Departments</option>
+          <option value="CSE">CSE</option>
+          <option value="IT">IT</option>
+          <option value="ECE">ECE</option>
+          <option value="MECH">MECH</option>
+          <option value="CIVIL">CIVIL</option>
+        </select>
       </div>
 
       <div className="head-form-container">

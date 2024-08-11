@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
             User user = existingUser.get();
             user.setName(userDetails.getName());
             user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword())); // Ensure the password is encoded
             user.setPhoto(userDetails.getPhoto());
             user.setRoles(userDetails.getRoles());
             return userRepository.save(user);
@@ -54,4 +54,11 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @Override
+public User getUserByEmail(String email) {
+    Optional<User> userOptional = userRepository.findByEmail(email);
+    return userOptional.orElse(null);
+}
+
 }

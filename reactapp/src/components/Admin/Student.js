@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import 'C:/Users/91739/Desktop/App/App_Development/reactapp/src/assets/style/AdminCss/Student.css';
+import '../../assets/style/AdminCss/Student.css';
 
 function Student() {
   const [students, setStudents] = useState([
@@ -16,52 +16,52 @@ function Student() {
   const [filterSection, setFilterSection] = useState('');
   const [formData, setFormData] = useState({ registerNo: '', name: '', email: '', password: '', dept: '', batch: '', section: '', ratings: '', contact: '' });
   const [editingIndex, setEditingIndex] = useState(null);
-  const [tempData, setTempData] = useState(null);
 
   const filteredStudents = students.filter(student =>
     (filterDept === '' || student.dept === filterDept) &&
     (filterBatch === '' || student.batch === filterBatch) &&
     (filterSection === '' || student.section === filterSection) &&
-    (student.name.toLowerCase().includes(searchTerm.toLowerCase()) || student.email.toLowerCase().includes(searchTerm.toLowerCase()))
+    (student.registerNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddOrEdit = () => {
-    const { registerNo, name, email, password, dept, batch, section, ratings, contact } = formData;
-    if (registerNo && name && email && password && dept && batch && section && ratings && contact) {
-      if (editingIndex !== null) {
-        const updatedStudents = [...students];
-        updatedStudents[editingIndex] = formData;
-        setStudents(updatedStudents);
-        setEditingIndex(null);
-      } else {
-        setStudents([...students, formData]);
-      }
-      setFormData({ registerNo: '', name: '', email: '', password: '', dept: '', batch: '', section: '', ratings: '', contact: '' });
-    } else {
-      alert('All fields must be filled out.');
-    }
+  const handleStudentChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedStudents = [...students];
+    updatedStudents[index] = { ...updatedStudents[index], [name]: value };
+    setStudents(updatedStudents);
   };
 
   const handleEditClick = (index) => {
-    setTempData({ ...students[index] });
     setEditingIndex(index);
   };
 
   const handleSaveClick = () => {
     setEditingIndex(null);
-    setTempData(null);
   };
 
   const handleCancelClick = () => {
-    const updatedStudents = [...students];
-    updatedStudents[editingIndex] = tempData;
-    setStudents(updatedStudents);
     setEditingIndex(null);
-    setTempData(null);
+  };
+
+  const handleAddStudent = () => {
+    const { registerNo, name, email, password, dept, batch, section, ratings, contact } = formData;
+    if (registerNo && name && email && password && dept && batch && section && ratings && contact) {
+      if (students.some(student => student.registerNo === registerNo || student.email === email)) {
+        alert('Student with this ID or Email already exists.');
+      } else {
+        setStudents([...students, formData]);
+        setFormData({ registerNo: '', name: '', email: '', password: '', dept: '', batch: '', section: '', ratings: '', contact: '' });
+      }
+    } else {
+      alert('All fields must be filled out.');
+    }
   };
 
   const handleDelete = (index) => {
@@ -77,7 +77,7 @@ function Student() {
       <div className="filters">
         <input
           type="text"
-          placeholder="Search students..."
+          placeholder="Search by ID, Name, or Email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -115,8 +115,8 @@ function Student() {
         <input type="text" name="section" placeholder="Section" value={formData.section} onChange={handleInputChange} />
         <input type="number" name="ratings" placeholder="Ratings" value={formData.ratings} onChange={handleInputChange} />
         <input type="text" name="contact" placeholder="Contact" value={formData.contact} onChange={handleInputChange} />
-        <button className="add-student-button" onClick={handleAddOrEdit}>
-          <FontAwesomeIcon icon={faPlus} /> {editingIndex !== null ? 'Update Student' : 'Add Student'}
+        <button className="add-student-button" onClick={handleAddStudent}>
+          <FontAwesomeIcon icon={faPlus} /> Add Student
         </button>
       </div>
 
@@ -140,18 +140,18 @@ function Student() {
             <tr key={index}>
               {editingIndex === index ? (
                 <>
-                  <td><input type="text" name="registerNo" value={student.registerNo} onChange={(e) => handleInputChange(e)} disabled /></td>
-                  <td><input type="text" name="name" value={student.name} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="email" name="email" value={student.email} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="password" name="password" value={student.password} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="text" name="dept" value={student.dept} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="text" name="batch" value={student.batch} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="text" name="section" value={student.section} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="number" name="ratings" value={student.ratings} onChange={(e) => handleInputChange(e)} /></td>
-                  <td><input type="text" name="contact" value={student.contact} onChange={(e) => handleInputChange(e)} /></td>
+                  <td>{student.registerNo}</td>
+                  <td><input type="text" name="name" value={student.name} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="email" name="email" value={student.email} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="password" name="password" value={student.password} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="text" name="dept" value={student.dept} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="text" name="batch" value={student.batch} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="text" name="section" value={student.section} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="number" name="ratings" value={student.ratings} onChange={(e) => handleStudentChange(e, index)} /></td>
+                  <td><input type="text" name="contact" value={student.contact} onChange={(e) => handleStudentChange(e, index)} /></td>
                   <td>
-                    <FontAwesomeIcon icon={faCheck} onClick={handleSaveClick} className="action-icon" />
-                    <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} className="action-icon" />
+                    <FontAwesomeIcon icon={faCheck} onClick={handleSaveClick} />
+                    <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} />
                   </td>
                 </>
               ) : (
@@ -166,7 +166,7 @@ function Student() {
                   <td>{student.ratings}</td>
                   <td>{student.contact}</td>
                   <td>
-                    <FontAwesomeIcon icon={faEdit} onClick={() => handleEditClick(index)} className="action-icon" />
+                    <FontAwesomeIcon icon={faEdit} onClick={() => handleEditClick(index)} className="action-icon"/>
                     <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(index)} className="action-icon" />
                   </td>
                 </>

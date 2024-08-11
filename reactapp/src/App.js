@@ -18,7 +18,10 @@ import HeadDashboard from './components/Head/HeadPanel';
 import Interviewer from './components/Interviewer';
 import MentorDashboard from './components/Mentors/MentorPanel.js';
 import VideoRec from './components/VideoRec';
-import AdminDashboard from 'C:/Users/91739/Desktop/App/App_Development/reactapp/src/components/Admin/AdminPanel.js';
+import AdminDashboard from '../src/components/Admin/AdminPanel.js';
+import InterviewerDashboard from './components/Interviewers/InterviewerPanel.js';
+import StudentDashboard from './components/Students/StudentPanel.js';
+import Demo from './components/Students/Demo.js';
 function App() {
   return (
     <div className="App">
@@ -34,8 +37,9 @@ function App() {
         <Route path="/notification" element={<Notifications />} />
         <Route path="/profile" element={<Profile />} /> */}
         <Route path="/practice-sessions" element={<VideoRec />} /> 
-        <Route path="/interviewerdashboard" element={<Interviewer/>} />
-        <Route path="/coderdashboard/*" element={<Coder/>} />
+        <Route path="/hrround" element={<Demo />} /> 
+        <Route path="/interviewerdashboard/*" element={<InterviewerDashboard/>} />
+        <Route path="/studentdashboard/*" element={<StudentDashboard/>} />
         <Route path="/admindashboard/*" element={< AdminDashboard/>} />
         <Route path="/mentordashboard/*" element={<MentorDashboard />} />
         <Route path="/headdashboard/*" element={<HeadDashboard />} />

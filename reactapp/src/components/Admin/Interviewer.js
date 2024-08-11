@@ -5,17 +5,18 @@ import '../../assets/style/AdminCss/Interviewer.css';
 
 function Interviewer() {
   const [interviewers, setInterviewers] = useState([
-    { id: '1', name: 'John Doe', email: 'john@example.com', qualification: 'MBA', experience: '5 years' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com', qualification: 'MSc', experience: '3 years' },
+    { id: '1', name: 'John Doe', email: 'john@example.com', password: 'password123', contact: '123-456-7890' },
+    { id: '2', name: 'Jane Smith', email: 'jane@example.com', password: 'password456', contact: '987-654-3210' },
     // More interviewer data here...
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [formData, setFormData] = useState({ id: '', name: '', email: '', qualification: '', experience: '' });
+  const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '' });
   const [editingIndex, setEditingIndex] = useState(null);
-  const [editFormData, setEditFormData] = useState({ id: '', name: '', email: '', qualification: '', experience: '' });
+  const [editFormData, setEditFormData] = useState({ id: '', name: '', email: '', password: '', contact: '' });
 
   const filteredInterviewers = interviewers.filter(interviewer =>
+    interviewer.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     interviewer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     interviewer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -29,8 +30,8 @@ function Interviewer() {
   };
 
   const handleAddOrEdit = () => {
-    const { id, name, email, qualification, experience } = formData;
-    if (id && name && email && qualification && experience) {
+    const { id, name, email, password, contact } = formData;
+    if (id && name && email && password && contact) {
       if (editingIndex !== null) {
         const updatedInterviewers = [...interviewers];
         updatedInterviewers[editingIndex] = formData;
@@ -39,7 +40,7 @@ function Interviewer() {
       } else {
         setInterviewers([...interviewers, formData]);
       }
-      setFormData({ id: '', name: '', email: '', qualification: '', experience: '' });
+      setFormData({ id: '', name: '', email: '', password: '', contact: '' });
     } else {
       alert('All fields must be filled out.');
     }
@@ -74,7 +75,7 @@ function Interviewer() {
       <div className="filters">
         <input
           type="text"
-          placeholder="Search interviewers..."
+          placeholder="Search interviewers by ID, Name, or Email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -84,8 +85,8 @@ function Interviewer() {
         <input type="text" name="id" placeholder="ID" value={formData.id} onChange={handleInputChange} />
         <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleInputChange} />
         <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} />
-        <input type="text" name="qualification" placeholder="Qualification" value={formData.qualification} onChange={handleInputChange} />
-        <input type="text" name="experience" placeholder="Experience" value={formData.experience} onChange={handleInputChange} />
+        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} />
+        <input type="text" name="contact" placeholder="Contact" value={formData.contact} onChange={handleInputChange} />
         <div className="add-interviewer-button-container">
           <button className="add-interviewer-button" onClick={handleAddOrEdit}>
             <FontAwesomeIcon icon={faPlus} /> {editingIndex !== null ? 'Update Interviewer' : 'Add Interviewer'}
@@ -99,8 +100,8 @@ function Interviewer() {
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Qualification</th>
-            <th>Experience</th>
+            <th>Password</th>
+            <th>Contact</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -112,8 +113,8 @@ function Interviewer() {
                   <td><input type="text" name="id" value={editFormData.id} onChange={handleEditInputChange} disabled /></td>
                   <td><input type="text" name="name" value={editFormData.name} onChange={handleEditInputChange} /></td>
                   <td><input type="email" name="email" value={editFormData.email} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="qualification" value={editFormData.qualification} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="experience" value={editFormData.experience} onChange={handleEditInputChange} /></td>
+                  <td><input type="password" name="password" value={editFormData.password} onChange={handleEditInputChange} /></td>
+                  <td><input type="text" name="contact" value={editFormData.contact} onChange={handleEditInputChange} /></td>
                   <td>
                     <FontAwesomeIcon icon={faCheck} onClick={() => handleSaveClick(index)} className="action-icon" />
                     <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} className="action-icon" />
@@ -124,8 +125,8 @@ function Interviewer() {
                   <td>{interviewer.id}</td>
                   <td>{interviewer.name}</td>
                   <td>{interviewer.email}</td>
-                  <td>{interviewer.qualification}</td>
-                  <td>{interviewer.experience}</td>
+                  <td>{interviewer.password}</td>
+                  <td>{interviewer.contact}</td>
                   <td>
                     <FontAwesomeIcon icon={faEdit} onClick={() => handleEditClick(index)} className="action-icon" />
                     <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(index)} className="action-icon" />

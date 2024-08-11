@@ -1,5 +1,5 @@
 import React from 'react';
-import 'C:/Users/91739/Desktop/App/App_Development/reactapp/src/assets/style/AdminCss/ScheduleAdmin.css';
+import '../../assets/style/AdminCss/ScheduleAdmin.css';
 
 const ScheduleAdminDashboard = () => {
   const schedules = [

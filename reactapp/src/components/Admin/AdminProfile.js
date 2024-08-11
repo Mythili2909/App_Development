@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import 'C:/Users/91739/Desktop/App/App_Development/reactapp/src/assets/style/AdminCss/AdminProfile.css';
-import AdminProfileImg from 'C:/Users/91739/Desktop/App/App_Development/reactapp/src/assets/images/admin img.png';
+import '../../assets/style/AdminCss/AdminProfile.css';
+import AdminProfileImg from '../../assets/images/admin img.png';
 
 const ProfileAdmin = () => {
   const [adminData, setAdminData] = useState({

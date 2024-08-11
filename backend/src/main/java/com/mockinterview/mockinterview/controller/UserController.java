@@ -52,6 +52,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/email/{email}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() {
