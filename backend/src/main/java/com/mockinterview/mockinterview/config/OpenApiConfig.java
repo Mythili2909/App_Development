@@ -21,7 +21,7 @@ public class OpenApiConfig {
                 server.setDescription("App Development");
 
                 Info info = new Info()
-                                .title("IntervueHub")
+                                .title("Mock Interview API")
                                 .version("0.1")
                                 .description("swagger configuration testing.");
 

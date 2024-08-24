@@ -1,28 +1,26 @@
-import axios from 'axios';
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import '../assets/style/Register.css';
-
 import img from '../assets/images/reg img.png';
+import axios from "axios";
 
 function Register() {
+    const apiUrl = 'http://127.0.0.1:8080/api/users';
     const [formData, setFormData] = useState({
         firstname: '',
         email: '',
         password: '',
         confirmPassword: '',
-        roles: '' // Default roles set to an empty string
+        role: '' // Default role set to an empty string
     });
-
     const [errors, setErrors] = useState({
         firstname: '',
         email: '',
         password: '',
         confirmPassword: '',
-        roles: '' // Add roles error handling
+        role: '' // Add role error handling
     });
 
-    const apiurl = "http://127.0.0.1:8080/api/users";
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -36,17 +34,18 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newErrors = {};
-
+    
+        // Validation code (uncomment if you want to perform validation)
         if (!formData.firstname) {
             newErrors.firstname = 'Firstname is required';
         }
-
+    
         if (!formData.email) {
             newErrors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Email address is invalid';
         }
-
+    
         if (!formData.password) {
             newErrors.password = 'Password is required';
         } else if (formData.password.length < 6) {
@@ -54,47 +53,49 @@ function Register() {
         } else if (!/[a-zA-Z]/.test(formData.password)) {
             newErrors.password = 'Password must contain at least one alphabet';
         }
-
+    
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Confirm Password is required';
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords must match';
         }
-
-        if (!formData.roles) {
-            newErrors.roles = 'Role is required'; // Error handling for roles
+    
+        if (!formData.role) {
+            newErrors.role = 'Role is required'; // Error handling for role
         }
-
+    
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            return; // Stop the function here if there are validation errors
+            return;
+        } else {
+            setErrors({});
         }
-
+    
         try {
-            const response = await axios.post(apiurl, {
+            const response = await axios.post(apiUrl, {
                 id: 0,
-                firstname: formData.firstname,
+                name: formData.firstname,
                 email: formData.email,
                 password: formData.password,
-                confirmPassword: formData.confirmPassword,
-                roles: formData.roles // Updated field name
+                roles: formData.role,
             });
-
+    
             console.log(response);
-            alert("User created successfully");
-            navigate("/login"); // Navigate to login after successful registration
+            alert("Registration successful");
+            navigate("/login"); // Navigate to login page on successful registration
         } catch (error) {
-            console.error(error);
-            alert("Something went wrong");
+            console.error('Registration error:', error);
+            alert("Something went wrong. Please try again.");
         }
     };
+    
 
     return (
         <div className="background-wrapper">
             <div className="login-container">
                 <div className="whole">
                     <div className="left-half">
-                        <img src={img} alt="register" />
+                        <img src={img} style={{ color: "#2f65ad" }} alt="register" />
                     </div>
                     <div className="right-half">
                         <form onSubmit={handleSubmit} className="login-form">
@@ -105,7 +106,6 @@ function Register() {
                                 name="firstname"
                                 value={formData.firstname}
                                 onChange={handleChange}
-                                className={errors.firstname ? 'error-input' : ''}
                             />
                             {errors.firstname && <p className="error">{errors.firstname}</p>}
                             <input
@@ -114,7 +114,6 @@ function Register() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className={errors.email ? 'error-input' : ''}
                             />
                             {errors.email && <p className="error">{errors.email}</p>}
                             <input
@@ -123,7 +122,6 @@ function Register() {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className={errors.password ? 'error-input' : ''}
                             />
                             {errors.password && <p className="error">{errors.password}</p>}
                             <input
@@ -132,18 +130,21 @@ function Register() {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                className={errors.confirmPassword ? 'error-input' : ''}
                             />
                             {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-                            <input
-                                type="text"
-                                placeholder="Enter your roles"
-                                name="roles"
-                                value={formData.roles}
+                            <select
+                                name="role"
+                                value={formData.role}
                                 onChange={handleChange}
-                                className={errors.roles ? 'error-input' : ''}
-                            />
-                            {errors.roles && <p className="error">{errors.roles}</p>} {/* Display roles error */}
+                            >
+                                <option value="" disabled>Select Role</option>
+                                <option value="ROLE_STUDENT">ROLE_STUDENT</option>
+                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                <option value="ROLE_MENTOR">ROLE_MENTOR</option>
+                                <option value="ROLE_INTERVIEWER">ROLE_INTERVIEWER</option>
+                                <option value="ROLE_HEAD">ROLE_HEAD</option>
+                            </select>
+                            {errors.role && <p className="error">{errors.role}</p>} {/* Display role error */}
                             <button type="submit">Sign Up</button>
                             <p>Have an account? <Link to='/login'>Sign In</Link></p>
                         </form>
@@ -154,4 +155,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default Register;

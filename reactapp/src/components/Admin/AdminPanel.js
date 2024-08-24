@@ -1,22 +1,29 @@
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import AdminProfileImg from '../../assets/images/admin img.png';
-// import AdminReports from '../Admin/AdminReports';
-import AdminProfile from '../../components/Admin/AdminProfile';
-// import DeleteUser from './Head';
-// import EditUser from './Mentor';
-import FeedbackAdmindash from '../../components/Admin/FeedBackadmindash';
-import ScheduleAdminDashboard from '../../components/Admin/ScheduleAdmin';
-// import UserView from '../../components/Admin/Student';
-
 import '../../assets/style/AdminCss/AdminPanel.css';
-import Student from '../../components/Admin/Student';
-import Mentor from './Mentor';
 import Head from './Head';
-import Interviewer from './Interviewer';
+import Mentor from './Mentor';
+import Student from './Student';
+import ScheduleAdminDashboard from './ScheduleAdmin';
 import AdminReports from './AdminReports';
+import Interviewer from './Interviewer';
+import ProfileAdmin from './AdminProfile';
 
 function AdminDashboard() {
+  const navigate=useNavigate();
+
+const logout = () => {
+  localStorage.removeItem('token');
+};
+const handleLogout = () => {
+  logout();
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('email');
+  localStorage.removeItem('userId');
+  navigate('/');
+};
   return (
     <div className="dashboard-container">
       <div className="side-panel">
@@ -56,12 +63,12 @@ function AdminDashboard() {
                 Students
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/admindashboard/feedback">
                 <i className="fas fa-comment-dots nav-icon"></i>
                 Feedback
               </Link>
-            </li>
+            </li> */}
             {/* <li>
               <Link to="/admindashboard/schedules">
                 <i className="fas fa-calendar nav-icon"></i>
@@ -74,24 +81,26 @@ function AdminDashboard() {
                 Reports
               </Link>
             </li>
-            <li>
-              <Link to="/">
+            
+            <li onClick={handleLogout} >
+            <Link onClick={handleLogout}>
                 <i className="fas fa-sign-out-alt nav-icon"></i>
                 Logout
-              </Link>
+                </Link>
             </li>
+            
+            
           </ul>
         </nav>
       </div>
       <div className="main-content">
         <Routes>
-          <Route path="profile" element={<AdminProfile />} />
+          <Route path="profile" element={<ProfileAdmin/>} />
           <Route path="notifications" element={<DefaultContent />} />
           <Route path="head" element={<Head />} />
           <Route path="mentor" element={<Mentor/>} />
           <Route path="interviewer" element={<Interviewer />} />
           <Route path="student" element={<Student />} />
-          <Route path="feedback" element={<FeedbackAdmindash />} />
           <Route path="schedules" element={<ScheduleAdminDashboard />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="/" element={<DefaultContent />} />
@@ -110,7 +119,7 @@ const DefaultContent = () => (
     </div>
     <div className="card update-card">
       <h3>Daily Updates</h3>
-      <p><strong>Today’s Tasks:</strong> Review new feedback, check interview schedules, and update user profiles.</p>
+      <p><strong>Today's Tasks:</strong> Review new feedback, check interview schedules, and update user profiles.</p>
       <p><strong>Pending Actions:</strong> Approve new interview requests and verify user credentials.</p>
     </div>
     <div className="card stats-card">

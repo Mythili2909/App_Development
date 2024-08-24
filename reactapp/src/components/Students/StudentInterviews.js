@@ -6,11 +6,11 @@ const StudentInterviews = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleTakeTest = (roundType) => {
-    if (roundType === 'HR Round') {
-      navigate('/demo'); // Navigate to the 'demo' page for HR Round
+    if (roundType === 'Mock Interview') {
+      navigate('/studentdashboard/videointerview'); // Navigate to the 'demo' page for HR Round
     } else {
       // Handle other rounds or default behavior
-      alert(`Navigating to ${roundType} test`);
+    
     }
   };
 
@@ -26,9 +26,9 @@ const StudentInterviews = () => {
           </button>
         </div>
         <div className="card">
-          <h3>HR Round</h3>
-          <p>Prepare for the HR round with behavioral and situational questions.</p>
-          <button onClick={() => handleTakeTest('HR Round')} className="take-test-button">
+          <h3>Interview Round</h3>
+          <p>Prepare for this round with behavioral and situational questions.</p>
+          <button onClick={() => handleTakeTest('Mock Interview')} className="take-test-button">
             Take Test
           </button>
         </div>

@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../assets/style/AdminCss/Interviewer.css';
 
 function Interviewer() {
-  const [interviewers, setInterviewers] = useState([
-    { id: '1', name: 'John Doe', email: 'john@example.com', password: 'password123', contact: '123-456-7890' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com', password: 'password456', contact: '987-654-3210' },
-    // More interviewer data here...
-  ]);
-
+  const [interviewers, setInterviewers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '' });
+  const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', roles: 'ROLE_INTERVIEWER' });
   const [editingIndex, setEditingIndex] = useState(null);
   const [editFormData, setEditFormData] = useState({ id: '', name: '', email: '', password: '', contact: '' });
 
+  const token = localStorage.getItem('token');
+  const apiUrl = 'http://127.0.0.1:8080/api/admin/interviewers';
+
+  useEffect(() => {
+    axios.get(apiUrl, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then((response) => {
+      setInterviewers(response.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }, [apiUrl, token]);
+
   const filteredInterviewers = interviewers.filter(interviewer =>
-    interviewer.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    interviewer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    interviewer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (String(interviewer.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(interviewer.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(interviewer.email).toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleInputChange = (e) => {
@@ -29,20 +40,47 @@ function Interviewer() {
     setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
   };
 
-  const handleAddOrEdit = () => {
+  const showToast = (message, type) => {
+    if (type === 'success') {
+      toast.success(message);
+    } else if (type === 'error') {
+      toast.error(message);
+    }
+  };
+
+  const handleAddOrEdit = async () => {
     const { id, name, email, password, contact } = formData;
     if (id && name && email && password && contact) {
       if (editingIndex !== null) {
-        const updatedInterviewers = [...interviewers];
-        updatedInterviewers[editingIndex] = formData;
-        setInterviewers(updatedInterviewers);
-        setEditingIndex(null);
+        // Update existing interviewer
+        await axios.put(`${apiUrl}/${formData.id}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).then((response) => {
+          const updatedInterviewers = [...interviewers];
+          updatedInterviewers[editingIndex] = response.data;
+          setInterviewers(updatedInterviewers);
+          setEditingIndex(null);
+          setFormData({ id: '', name: '', email: '', password: '', contact: '' });
+          showToast('Interviewer updated successfully!', 'success');
+        }).catch((error) => {
+          console.log(error);
+          showToast('Failed to update interviewer.', 'error');
+        });
       } else {
-        setInterviewers([...interviewers, formData]);
+        // Add new interviewer
+        await axios.post(apiUrl, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).then((response) => {
+          setInterviewers([...interviewers, response.data]);
+          setFormData({ id: '', name: '', email: '', password: '', contact: '' });
+          showToast('Interviewer added successfully!', 'success');
+        }).catch((error) => {
+          console.log(error);
+          showToast('Failed to add interviewer.', 'error');
+        });
       }
-      setFormData({ id: '', name: '', email: '', password: '', contact: '' });
     } else {
-      alert('All fields must be filled out.');
+      showToast('All fields must be filled out.', 'error');
     }
   };
 
@@ -51,21 +89,40 @@ function Interviewer() {
     setEditFormData(interviewers[index]);
   };
 
-  const handleSaveClick = (index) => {
-    const updatedInterviewers = [...interviewers];
-    updatedInterviewers[index] = editFormData;
-    setInterviewers(updatedInterviewers);
-    setEditingIndex(null);
+  const handleSaveClick = async () => {
+    await axios.put(`${apiUrl}/${editFormData.id}`, editFormData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then((response) => {
+      const updatedInterviewers = [...interviewers];
+      updatedInterviewers[editingIndex] = response.data;
+      setInterviewers(updatedInterviewers);
+      setEditingIndex(null);
+      setEditFormData({ id: '', name: '', email: '', password: '', contact: '' });
+      showToast('Interviewer updated successfully!', 'success');
+    }).catch((error) => {
+      console.log(error);
+      showToast('Failed to update interviewer.', 'error');
+    });
   };
 
   const handleCancelClick = () => {
     setEditingIndex(null);
+    setEditFormData({ id: '', name: '', email: '', password: '', contact: '' });
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
     if (window.confirm("Are you sure you want to delete this interviewer?")) {
-      const updatedInterviewers = interviewers.filter((_, i) => i !== index);
-      setInterviewers(updatedInterviewers);
+      const interviewerToDelete = interviewers[index];
+      await axios.delete(`${apiUrl}/${interviewerToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(() => {
+        const updatedInterviewers = interviewers.filter((_, i) => i !== index);
+        setInterviewers(updatedInterviewers);
+        showToast('Interviewer deleted successfully!', 'success');
+      }).catch((error) => {
+        console.log(error);
+        showToast('Failed to delete interviewer.', 'error');
+      });
     }
   };
 
@@ -116,7 +173,7 @@ function Interviewer() {
                   <td><input type="password" name="password" value={editFormData.password} onChange={handleEditInputChange} /></td>
                   <td><input type="text" name="contact" value={editFormData.contact} onChange={handleEditInputChange} /></td>
                   <td>
-                    <FontAwesomeIcon icon={faCheck} onClick={() => handleSaveClick(index)} className="action-icon" />
+                    <FontAwesomeIcon icon={faCheck} onClick={handleSaveClick} className="action-icon" />
                     <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} className="action-icon" />
                   </td>
                 </>
@@ -137,6 +194,8 @@ function Interviewer() {
           ))}
         </tbody>
       </table>
+
+      <ToastContainer />
     </div>
   );
 }

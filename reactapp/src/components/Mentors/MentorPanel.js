@@ -1,14 +1,25 @@
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import MentorProfileImg from '../../assets/images/admin img.png'; // Update this with the actual path to the mentor's profile image
 import MentorStudent from '../Mentors/MentorStudent';
 import MentorReports from '../Mentors/MentorReports';
-// import MentorLogout from '../../components/Mentor/MentorLogout';
-
 import '../../assets/style/MentorCss/MentorPanel.css'; // Use this CSS file
 import MentorProfile from './MentorProfile';
 
 function MentorDashboard() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any authentication tokens and other user data from local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
+    
+    // Navigate to the login page or home page
+    navigate('/');
+  };
+
   return (
     <div className="mentor-dashboard-container">
       <div className="mentor-side-panel">
@@ -30,11 +41,9 @@ function MentorDashboard() {
                 Reports
               </Link>
             </li>
-            <li>
-              <Link to="/" className="mentor-nav-link">
-                <i className="fas fa-sign-out-alt mentor-nav-icon"></i>
-                Logout
-              </Link>
+            <li onClick={handleLogout} style={{ cursor: 'pointer', color: "white", fontWeight: "bold", marginLeft: "10px", marginTop: "30px", marginBottom: "30px" }}>
+              <i className="fas fa-sign-out-alt nav-icon"></i>
+              Logout
             </li>
           </ul>
         </nav>

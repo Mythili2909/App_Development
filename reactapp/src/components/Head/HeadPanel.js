@@ -1,15 +1,51 @@
-import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
-import HeadProfileImg from '../../assets/images/admin img.png'; // Update this with the actual path to the head's profile image
-import HeadProfile from '../../components/Head/HeadProfile';
-import Mentor from '../../components/Head/HeadMentor';
-import Interviewer from '../../components/Head/HeadInterviewer';
-import Student from '../../components/Head/HeadStudent';
-import Reports from '../../components/Head/HeadReports';
+import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from 'chart.js';
+import React, { useEffect } from 'react';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import HeadProfileImg from '../../assets/images/admin img.png';
+// import FeedbackHeadDash from './FeedbackHeadDash';
+// import ScheduleHeadDashboard from './ScheduleHead';
+import HeadProfile from './HeadProfile';
+// import HeadStudent from './HeadStudent';
+import HeadMentor from './HeadMentor';
 
-import '../../assets/style/HeadCss/HeadPanel.css'; // Use this CSS file
+import '../../assets/style/AdminCss/AdminPanel.css';
+import HeadChart from './HeadChart';
+import HeadSchedule from '../Head/HeadSchedule';
+import HeadStudent from './HeadStudent';
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 function HeadDashboard() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handlePopState = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('email');
+      navigate('/login', { replace: true });
+      window.history.replaceState(null, "", window.location.origin);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate]);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    navigate('/login', { replace: true });
+    window.history.replaceState(null, "", window.location.origin);
+  };
+
+  const storedEmail = localStorage.getItem('email');
+  const storedRole = localStorage.getItem('role');
+
   return (
     <div className="dashboard-container">
       <div className="side-panel">
@@ -20,31 +56,41 @@ function HeadDashboard() {
         <nav>
           <ul>
             <li>
-              <Link to="/headdashboard/mentor">
-                <i className="fas fa-user-graduate nav-icon"></i>
-                Mentor
+              <Link to="/head-dashboard">
+                <i className="fas fa-bell nav-icon"></i>
+                Notifications
               </Link>
             </li>
             <li>
-              <Link to="/headdashboard/interviewer">
-                <i className="fas fa-users nav-icon"></i>
-                Interviewer
+              <Link to="/head-dashboard/student-details">
+                <i className="fas fa-user nav-icon"></i>
+                Student Details
               </Link>
             </li>
             <li>
-              <Link to="/headdashboard/student">
-                <i className="fas fa-user-graduate nav-icon"></i>
-                Students
+              <Link to="/head-dashboard/mentor-details">
+                <i className="fas fa-edit nav-icon"></i>
+                Mentor Details
+              </Link>
+            </li>
+            {/* <li>
+              <Link to="/headdashboard/feedback">
+                <i className="fas fa-comment-dots nav-icon"></i>
+                Feedback
+              </Link>
+            </li> */}
+            <li>
+              <Link to="/head-dashboard/schedules">
+                <i className="fas fa-calendar nav-icon"></i>
+                Schedules
               </Link>
             </li>
             <li>
-              <Link to="/headdashboard/reports">
-                <i className="fas fa-file-alt nav-icon"></i>
-                Reports
-              </Link>
-            </li>
-            <li>
-              <Link to="/">
+              <Link 
+                to="/login" 
+                className="logout-button"
+                onClick={handleLogout}
+              >
                 <i className="fas fa-sign-out-alt nav-icon"></i>
                 Logout
               </Link>
@@ -55,15 +101,25 @@ function HeadDashboard() {
       <div className="main-content">
         <Routes>
           <Route path="profile" element={<HeadProfile />} />
-          <Route path="mentor" element={<Mentor />} />
-          <Route path="interviewer" element={<Interviewer />} />
-          <Route path="student" element={<Student />} />
+          <Route path="" element={<HeadChart />} />
+          <Route path="student-details" element={<HeadStudent />} />
+          <Route path="mentor-details" element={<HeadMentor />} />
+          <Route path='schedules' element={<HeadSchedule />} />
+          {/* <Route path="feedback" element={<FeedbackHeadDash />} /> */}
+          {/* <Route path="head-schedules" element={<ScheduleHeadDashboard />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="/" element={<Mentor />} />
+          <Route path="/" element={<HeadCharts />} /> */}
         </Routes>
       </div>
     </div>
   );
 }
+
+const Reports = () => (
+  <div>
+    <h3>Reports Page</h3>
+    <p>This is where the reports would be displayed.</p>
+  </div>
+);
 
 export default HeadDashboard;

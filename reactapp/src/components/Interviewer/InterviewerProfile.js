@@ -1,29 +1,27 @@
-
-import React, { useState, useEffect } from 'react';
-import '../../assets/style/AdminCss/AdminProfile.css';
-import AdminProfileImg from '../../assets/images/admin img.png';
+import React, { useState } from 'react';
+import '../../assets/style/InterviewerCss/InterviewerProfile.css'; // Ensure this path is correct
+import InterviewerProfileImg from '../../assets/images/admin img.png'; // Replace with actual path
 
 const InterviewerProfile = () => {
-  const [adminData, setAdminData] = useState({
-    username: 'admin_user',
-    email: 'admin@example.com',
+  const [interviewerData, setInterviewerData] = useState({
+    username: 'interviewer_user',
+    email: 'interviewer@example.com',
     password: 'password123',
-    phoneNumber: '123-456-7890',
-    qualification: 'Master’s in Computer Science',
-    role: 'Administrator',
-    experience: '10 years',
+    phoneNumber: '987-654-3210',
+    qualification: 'Bachelor’s in Software Engineering',
+    role: 'Interviewer',
+    experience: '5 years',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [totalAdmins, setTotalAdmins] = useState(50); // Example total number of admins
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleSaveClick = () => {
-    const emptyFields = Object.values(adminData).some(field => field === '');
+    const emptyFields = Object.values(interviewerData).some(field => field === '');
     if (emptyFields) {
       alert('Fields cannot be empty');
       return;
@@ -43,27 +41,27 @@ const InterviewerProfile = () => {
   };
 
   const handleChange = (e) => {
-    setAdminData({ ...adminData, [e.target.name]: e.target.value });
+    setInterviewerData({ ...interviewerData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className='profile-admin-whole-container'>
-      <div className="profile-admin-container">
+    <div className='profile-interviewer-whole-container'>
+      <div className="profile-interviewer-container">
         <div className="profile-image-container">
-          <img src={AdminProfileImg} alt="Admin" className="profile-image" />
+          <img src={InterviewerProfileImg} alt="Interviewer" className="profile-image" />
         </div>
-        <h2>Admin Profile</h2>
+        <h2>Interviewer Profile</h2>
         <form className="profile-form">
           <div className="form-group">
             <label>Username:</label>
-            <input type="text" value={adminData.username} disabled />
+            <input type="text" value={interviewerData.username} disabled />
           </div>
           <div className="form-group">
             <label>Email:</label>
             <input 
               type="email" 
               name="email" 
-              value={adminData.email} 
+              value={interviewerData.email} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
@@ -73,7 +71,7 @@ const InterviewerProfile = () => {
             <input 
               type="password" 
               name="password" 
-              value={adminData.password} 
+              value={interviewerData.password} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
@@ -83,7 +81,7 @@ const InterviewerProfile = () => {
             <input 
               type="text" 
               name="phoneNumber" 
-              value={adminData.phoneNumber} 
+              value={interviewerData.phoneNumber} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
@@ -93,21 +91,21 @@ const InterviewerProfile = () => {
             <input 
               type="text" 
               name="qualification" 
-              value={adminData.qualification} 
+              value={interviewerData.qualification} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
           </div>
           <div className="form-group">
             <label>Role:</label>
-            <input type="text" value={adminData.role} disabled />
+            <input type="text" value={interviewerData.role} disabled />
           </div>
           <div className="form-group">
             <label>Years of Experience:</label>
             <input 
               type="text" 
               name="experience" 
-              value={adminData.experience} 
+              value={interviewerData.experience} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
@@ -130,12 +128,6 @@ const InterviewerProfile = () => {
           </div>
         )}
       </div>
-      {/* <div className="total-admin-card">
-        <h3>Total Admins</h3>
-        <div className="circular-progress">
-          <div className="circular-number">{totalAdmins}</div>
-        </div>
-      </div> */}
     </div>
   );
 };

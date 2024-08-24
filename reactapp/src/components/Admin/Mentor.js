@@ -1,119 +1,140 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../assets/style/AdminCss/Mentor.css';
 
 function Mentor() {
-  const [mentors, setMentors] = useState([
-    { id: '1', name: 'Alice Johnson', email: 'alice@example.com', password: '*****', contact: '123-456-7890', dept: 'CSE', classBeingMentored: 'A' },
-    { id: '2', name: 'Bob Brown', email: 'bob@example.com', password: '*****', contact: '987-654-3210', dept: 'IT', classBeingMentored: 'B' },
-    // More mentor data here...
-  ]);
-
+  const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchDept, setSearchDept] = useState('');
   const [searchBatch, setSearchBatch] = useState('');
-  const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editFormData, setEditFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
+  const [editFormData, setEditFormData] = useState(null);
+  const [originalData, setOriginalData] = useState(null);
 
-  // Filter mentors based on search terms and dropdown selections
+  useEffect(() => {
+    const userRole = localStorage.getItem('role');
+    if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_HEAD') {
+      fetchMentors();
+    } else {
+      toast.error('You do not have permission to view this page.');
+    }
+  }, []);
+
+  const fetchMentors = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8080/api/admin/mentors', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setMentors(response.data);
+    } catch (error) {
+      console.error('Error fetching mentors:', error);
+      toast.error('Error fetching mentors.');
+    }
+  };
+
+  const handleInputChange = (e, field, mentorId) => {
+    setEditFormData(prevData => ({
+      ...prevData,
+      [mentorId]: {
+        ...prevData[mentorId],
+        [field]: e.target.value
+      }
+    }));
+  };
+
+  const handleSaveClick = async (mentorId) => {
+    const updatedData = editFormData[mentorId];
+    try {
+      await axios.put(`http://127.0.0.1:8080/api/admin/mentors/${mentorId}`, updatedData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setMentors(prevMentors =>
+        prevMentors.map(mentor =>
+          mentor.id === mentorId ? { ...mentor, ...updatedData } : mentor
+        )
+      );
+      setEditFormData(prevData => {
+        const newData = { ...prevData };
+        delete newData[mentorId];
+        return newData;
+      });
+      toast.success('Mentor updated successfully.');
+    } catch (error) {
+      console.error('Error updating mentor:', error);
+      toast.error('Error updating mentor.');
+    }
+  };
+
+  const handleCancelClick = (mentorId) => {
+    setEditFormData(prevData => {
+      const newData = { ...prevData };
+      delete newData[mentorId];
+      return newData;
+    });
+  };
+
+  const handleDelete = async (mentor) => {
+    if (window.confirm("Are you sure you want to delete this mentor?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:8080/api/admin/mentors/${mentor.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setMentors(mentors.filter(m => m.id !== mentor.id));
+        toast.success('Mentor deleted successfully.');
+      } catch (error) {
+        console.error('Error deleting mentor:', error);
+        toast.error('Error deleting mentor.');
+      }
+    }
+  };
+
+  const startEditing = (mentor) => {
+    setEditFormData({ [mentor.id]: mentor });
+    setOriginalData(mentor);
+  };
+
   const filteredMentors = mentors.filter(mentor =>
-    (mentor.id.includes(searchTerm) || 
-    mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    mentor.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (String(mentor.id).includes(searchTerm) ||
+      mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mentor.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (searchDept ? mentor.dept === searchDept : true) &&
     (searchBatch ? mentor.classBeingMentored === searchBatch : true)
   );
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleEditInputChange = (e) => {
-    setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
-  };
-
-  const handleAddOrEdit = () => {
-    const { id, name, email, password, contact, dept, classBeingMentored } = formData;
-    if (id && name && email && password && contact && dept && classBeingMentored) {
-      if (editingIndex !== null) {
-        const updatedMentors = [...mentors];
-        updatedMentors[editingIndex] = formData;
-        setMentors(updatedMentors);
-        setEditingIndex(null);
-      } else {
-        setMentors([...mentors, formData]);
-      }
-      setFormData({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
-    } else {
-      alert('All fields must be filled out.');
-    }
-  };
-
-  const handleEditClick = (index) => {
-    setEditingIndex(index);
-    setEditFormData(mentors[index]);
-  };
-
-  const handleSaveClick = (index) => {
-    const updatedMentors = [...mentors];
-    updatedMentors[index] = editFormData;
-    setMentors(updatedMentors);
-    setEditingIndex(null);
-  };
-
-  const handleCancelClick = () => {
-    setEditingIndex(null);
-  };
-
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this mentor?")) {
-      const updatedMentors = mentors.filter((_, i) => i !== index);
-      setMentors(updatedMentors);
-    }
-  };
-
   return (
     <div className="mentor-view">
+      <ToastContainer />
       <h2>Mentor Management</h2>
       <div className="filters">
         <input
           type="text"
-          placeholder="Search by ID, name, or email..."
+          placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select value={searchDept} onChange={(e) => setSearchDept(e.target.value)}>
           <option value="">All Departments</option>
           <option value="CSE">CSE</option>
-          <option value="IT">IT</option>
-          <option value="CIVIL">CIVIL</option>
-          <option value="MECH">MECH</option>
-          <option value="EEE">EEE</option>
           <option value="ECE">ECE</option>
+          <option value="EEE">EEE</option>
+          <option value="IT">IT</option>
         </select>
         <select value={searchBatch} onChange={(e) => setSearchBatch(e.target.value)}>
           <option value="">All Classes</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
+          <option value="1">Class 1</option>
+          <option value="2">Class 2</option>
+          <option value="3">Class 3</option>
+          <option value="4">Class 4</option>
         </select>
-      </div>
-
-      <div className="mentor-form">
-        <input type="text" name="id" placeholder="ID" value={formData.id} onChange={handleInputChange} />
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleInputChange} />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} />
-        <input type="text" name="contact" placeholder="Contact" value={formData.contact} onChange={handleInputChange} />
-        <input type="text" name="dept" placeholder="Department" value={formData.dept} onChange={handleInputChange} />
-        <input type="text" name="classBeingMentored" placeholder="Class Being Mentored" value={formData.classBeingMentored} onChange={handleInputChange} />
-        <div className="add-mentor-button-container">
-          <button className="add-mentor-button" onClick={handleAddOrEdit}>
-            <FontAwesomeIcon icon={faPlus} /> {editingIndex !== null ? 'Update Mentor' : 'Add Mentor'}
-          </button>
-        </div>
       </div>
 
       <table className="mentor-table">
@@ -125,42 +146,94 @@ function Mentor() {
             <th>Password</th>
             <th>Contact</th>
             <th>Department</th>
-            <th>Class</th>
+            <th>Class Being Mentored</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredMentors.map((mentor, index) => (
-            <tr key={index}>
-              {editingIndex === index ? (
-                <>
-                  <td><input type="text" name="id" value={editFormData.id} onChange={handleEditInputChange} disabled /></td>
-                  <td><input type="text" name="name" value={editFormData.name} onChange={handleEditInputChange} /></td>
-                  <td><input type="email" name="email" value={editFormData.email} onChange={handleEditInputChange} /></td>
-                  <td><input type="password" name="password" value={editFormData.password} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="contact" value={editFormData.contact} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="dept" value={editFormData.dept} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="classBeingMentored" value={editFormData.classBeingMentored} onChange={handleEditInputChange} /></td>
-                  <td>
-                    <FontAwesomeIcon icon={faCheck} onClick={() => handleSaveClick(index)} className="action-icon" />
-                    <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} className="action-icon" />
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td>{mentor.id}</td>
-                  <td>{mentor.name}</td>
-                  <td>{mentor.email}</td>
-                  <td>{mentor.password}</td>
-                  <td>{mentor.contact}</td>
-                  <td>{mentor.dept}</td>
-                  <td>{mentor.classBeingMentored}</td>
-                  <td>
-                    <FontAwesomeIcon icon={faEdit} onClick={() => handleEditClick(index)} className="action-icon" />
-                    <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(index)} className="action-icon" />
-                  </td>
-                </>
-              )}
+          {filteredMentors.map(mentor => (
+            <tr key={mentor.id}>
+              <td>{mentor.id}</td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="text"
+                    value={editFormData[mentor.id].name}
+                    onChange={(e) => handleInputChange(e, 'name', mentor.id)}
+                  /> :
+                  mentor.name
+                }
+              </td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="email"
+                    value={editFormData[mentor.id].email}
+                    onChange={(e) => handleInputChange(e, 'email', mentor.id)}
+                  /> :
+                  mentor.email
+                }
+              </td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="password"
+                    value={editFormData[mentor.id].password}
+                    onChange={(e) => handleInputChange(e, 'password', mentor.id)}
+                  /> :
+                  mentor.password
+                }
+              </td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="text"
+                    value={editFormData[mentor.id].contact}
+                    onChange={(e) => handleInputChange(e, 'contact', mentor.id)}
+                  /> :
+                  mentor.contact
+                }
+              </td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="text"
+                    value={editFormData[mentor.id].dept}
+                    onChange={(e) => handleInputChange(e, 'dept', mentor.id)}
+                  /> :
+                  mentor.dept
+                }
+              </td>
+              <td className="editable-cell">
+                {editFormData && editFormData[mentor.id] ?
+                  <input
+                    type="text"
+                    value={editFormData[mentor.id].classBeingMentored}
+                    onChange={(e) => handleInputChange(e, 'classBeingMentored', mentor.id)}
+                  /> :
+                  mentor.classBeingMentored
+                }
+              </td>
+              <td className="action-buttons">
+                {editFormData && editFormData[mentor.id] ?
+                  <>
+                    <button onClick={() => handleSaveClick(mentor.id)}>
+                      <FontAwesomeIcon icon={faSave} /> Save
+                    </button>
+                    <button className="cancel-button" onClick={() => handleCancelClick(mentor.id)}>
+                      <FontAwesomeIcon icon={faTimes} /> Cancel
+                    </button>
+                  </> :
+                  <>
+                    <button onClick={() => startEditing(mentor)}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button onClick={() => handleDelete(mentor)}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </>
+                }
+              </td>
             </tr>
           ))}
         </tbody>

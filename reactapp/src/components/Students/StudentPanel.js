@@ -5,10 +5,10 @@ import StudentProfileImg from '../../assets/images/admin img.png'; // Update wit
 import Schedules from '../Students/Shedules'; // Placeholder for the Schedules component
 import StudentInterviews from '../Students/StudentInterviews'; // Placeholder for the Interviews component
 // import Logout from '../../components/Student/Logout'; // Placeholder for the Logout component
-
+import Performance from './Performance';
 import '../../assets/style/StudentCss/StudentPanel.css'; // Use this CSS file
 import StudentProfile from './StudentProfile';
-import Demo from './Demo';
+import VideoRecord from './VideoRecord';
 
 function StudentDashboard() {
   return (
@@ -33,6 +33,12 @@ function StudentDashboard() {
               </Link>
             </li>
             <li>
+              <Link to="/studentdashboard/performance">
+                <i className="fas fa-calendar-check nav-icon"></i>
+                Performance
+              </Link>
+            </li>
+            <li>
               <Link to="/">
                 <i className="fas fa-sign-out-alt nav-icon"></i>
                 Logout
@@ -46,9 +52,11 @@ function StudentDashboard() {
           <Route path="profile" element={<StudentProfile />} />
           <Route path="schedules" element={<Schedules />} />
           <Route path="interviews" element={<StudentInterviews />} />
-          <Route path="hrround" element={<Demo />} />
+          <Route path="videointerview" element={<VideoRecord />} />
+          <Route path="performance" element={<Performance />} />
+          
           {/* <Route path="logout" element={<Logout />} /> */}
-          <Route path="/" element={<Schedules />} />
+          <Route path="/" element={<Performance />} />
         </Routes>
       </div>
     </div>

@@ -1,29 +1,69 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import HeadProfileImg from '../../assets/images/admin img.png';
 
-import React, { useState, useEffect } from 'react';
-import '../../assets/style/HeadCss/HeadProfile.css';
-import AdminProfileImg from '../../assets/images/admin img.png';
-
-const ProfileHead = () => {
-  const [adminData, setAdminData] = useState({
-    username: 'admin_user',
-    email: 'admin@example.com',
-    password: 'password123',
-    phoneNumber: '123-456-7890',
-    qualification: 'Master’s in Computer Science',
-    role: 'Administrator',
-    experience: '10 years',
+const HeadProfile = () => {
+  const [headData, setHeadData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    contact: '',
+    dept: '',
+    roles: '',
+    experience: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [totalAdmins, setTotalAdmins] = useState(50); // Example total number of admins
+
+  const email = localStorage.getItem('email');
+
+  useEffect(() => {
+    if (email) {
+      fetchHeadData();
+    } else {
+      console.error("No email found in localStorage");
+    }
+  }, [email]);
+
+  const fetchHeadData = async () => {
+    if (!email) {
+      console.error("No email provided for fetching data.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(`http://localhost:8080/api/heads/${email}`, config);
+
+      setHeadData({
+        name: response.data.name || '',
+        email: response.data.email || '',
+        password: response.data.password || '',
+        contact: response.data.contact || '',
+        dept: response.data.dept || '',
+        roles: response.data.roles || '',
+        experience: response.data.experience || '',
+        departmentratings: response.data.departmentratings || '',
+      });
+    } catch (error) {
+      console.error('Error fetching head data:', error);
+    }
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleSaveClick = () => {
-    const emptyFields = Object.values(adminData).some(field => field === '');
+    const emptyFields = Object.values(headData).some(field => field === '');
     if (emptyFields) {
       alert('Fields cannot be empty');
       return;
@@ -31,11 +71,23 @@ const ProfileHead = () => {
     setShowConfirmation(true);
   };
 
-  const confirmSave = () => {
-    setShowConfirmation(false);
-    setIsEditing(false);
-    // Add logic to save updated data
-    alert('Data saved successfully');
+  const confirmSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await axios.put(`http://localhost:8080/api/head/${email}`, headData, config);
+      setShowConfirmation(false);
+      setIsEditing(false);
+      alert('Data saved successfully');
+    } catch (error) {
+      console.error('Error saving head data:', error);
+    }
   };
 
   const handleCancelClick = () => {
@@ -43,29 +95,35 @@ const ProfileHead = () => {
   };
 
   const handleChange = (e) => {
-    setAdminData({ ...adminData, [e.target.name]: e.target.value });
+    setHeadData({ ...headData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className='profile-admin-whole-container'>
-      <div className="profile-admin-container">
+    <div className='profile-head-whole-container'>
+      <div className="profile-head-container">
         <div className="profile-image-container">
-          <img src={AdminProfileImg} alt="Admin" className="profile-image" />
+          <img src={HeadProfileImg} alt="Head" className="profile-image" />
         </div>
-        <h2>Admin Profile</h2>
+        <h2>Head Profile</h2>
         <form className="profile-form">
           <div className="form-group">
-            <label>Username:</label>
-            <input type="text" value={adminData.username} disabled />
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={headData.name}
+              onChange={handleChange}
+              disabled={!isEditing} 
+            />
           </div>
           <div className="form-group">
             <label>Email:</label>
             <input 
               type="email" 
               name="email" 
-              value={adminData.email} 
+              value={headData.email} 
               onChange={handleChange} 
-              disabled={!isEditing} 
+              disabled
             />
           </div>
           <div className="form-group">
@@ -73,41 +131,47 @@ const ProfileHead = () => {
             <input 
               type="password" 
               name="password" 
-              value={adminData.password} 
+              value={headData.password} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
           </div>
           <div className="form-group">
-            <label>Phone Number:</label>
+            <label>Contact:</label>
             <input 
               type="text" 
-              name="phoneNumber" 
-              value={adminData.phoneNumber} 
+              name="contact" 
+              value={headData.contact} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
           </div>
           <div className="form-group">
-            <label>Qualification:</label>
+            <label>Department:</label>
             <input 
               type="text" 
-              name="qualification" 
-              value={adminData.qualification} 
+              name="dept" 
+              value={headData.dept} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
           </div>
           <div className="form-group">
             <label>Role:</label>
-            <input type="text" value={adminData.role} disabled />
+            <input 
+              type="text" 
+              name="roles"
+              value={headData.roles} 
+              onChange={handleChange} 
+              disabled 
+            />
           </div>
           <div className="form-group">
             <label>Years of Experience:</label>
             <input 
               type="text" 
               name="experience" 
-              value={adminData.experience} 
+              value={headData.experience} 
               onChange={handleChange} 
               disabled={!isEditing} 
             />
@@ -121,23 +185,18 @@ const ProfileHead = () => {
             <button type="button" className="profile-edit-button" onClick={handleEditClick}>Edit</button>
           )}
         </form>
-        
-        {showConfirmation && (
-          <div className="confirmation-dialog">
-            <p>Are you sure you want to save the changes?</p>
-            <button type="button" className="confirm-yes-button" onClick={confirmSave}>Yes</button>
-            <button type="button" className="confirm-no-button" onClick={() => setShowConfirmation(false)}>No</button>
-          </div>
-        )}
       </div>
-      {/* <div className="total-admin-card">
-        <h3>Total Admins</h3>
-        <div className="circular-progress">
-          <div className="circular-number">{totalAdmins}</div>
+      {showConfirmation && (
+        <div className="confirmation-dialog">
+          <p>Are you sure you want to save the changes?</p>
+          <div className="confirmation-actions">
+            <button className="confirm-button" onClick={confirmSave}>Yes</button>
+            <button className="cancel-button" onClick={() => setShowConfirmation(false)}>No</button>
+          </div>
         </div>
-      </div> */}
+      )}
     </div>
   );
 };
 
-export default ProfileHead;
+export default HeadProfile;

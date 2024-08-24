@@ -1,49 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import '../../assets/style/StudentCss/Demo.css';
-import MetricsChart from '../Students/MetricsChart';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import '../../assets/style/StudentCss/VideoRecord.css';
+import MetricsChart from './MetricsChart';
+import { toast } from 'react-toastify';
 
-const mockQuestions = [
-    "Tell me about yourself.",
-    "Why do you want this job?",
-    "What are your strengths and weaknesses?",
-    "Describe a challenge you faced and how you handled it.",
-    "Where do you see yourself in 5 years?"
-];
-
-const questionKeywords = {
-    "Tell me about yourself.": ["experience", "background", "skills", "education"],
-    "Why do you want this job?": ["interest", "company", "role", "contribution"],
-    "What are your strengths and weaknesses?": ["strengths", "weaknesses", "improvement", "skills"],
-    "Describe a challenge you faced and how you handled it.": ["challenge", "problem", "solution", "result"],
-    "Where do you see yourself in 5 years?": ["future", "goals", "career", "progress"]
-};
-
-const analyzeText = (text, question) => {
-    const keywords = questionKeywords[question] || [];
-    const answerKeywords = text.toLowerCase().split(' ');
-
-    let relevance = 0;
-    let accuracy = 0;
-    let efficiency = 0;
-
-    const keywordMatch = keywords.filter(keyword => answerKeywords.includes(keyword)).length;
-    const totalKeywords = keywords.length;
-
-    relevance = (keywordMatch / totalKeywords) * 100;
-    accuracy = Math.min(100, Math.max(0, relevance));
-    efficiency = Math.min(100, Math.max(0, keywordMatch));
-
-    return {
-        relevance,
-        accuracy,
-        efficiency
-    };
-};
-
-function Demo() {
+const VideoRecord = () => {
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState('');
+    const [keywords, setKeywords] = useState([]);
     const [recording, setRecording] = useState(false);
     const [videoURL, setVideoURL] = useState('');
-    const [currentQuestion, setCurrentQuestion] = useState('');
     const [recordingCompleted, setRecordingCompleted] = useState(false);
     const [transcription, setTranscription] = useState('');
     const [feedback, setFeedback] = useState('');
@@ -56,6 +22,29 @@ function Demo() {
     const mediaRecorderRef = useRef(null);
     const questionIndex = useRef(0);
     const speechRecognitionRef = useRef(null);
+
+    // Fetch JWT token from local storage
+    const jwtToken = localStorage.getItem('token');
+    const studentId = localStorage.getItem('userId');
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:8080/api/questions', {
+            headers: {
+                Authorization: `Bearer ${jwtToken}`
+            }
+        })
+            .then(response => {
+                const fetchedQuestions = response.data;
+                setQuestions(fetchedQuestions);
+                if (fetchedQuestions.length > 0) {
+                    setCurrentQuestion(fetchedQuestions[0].questionText);
+                    setKeywords(fetchedQuestions[0].keywords.split(','));
+                }
+            })
+            .catch(error => {
+                console.error("There was an error fetching the questions!", error);
+            });
+    }, [jwtToken]);
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -83,12 +72,13 @@ function Demo() {
     useEffect(() => {
         if (recording) {
             const questionInterval = setInterval(() => {
-                questionIndex.current = (questionIndex.current + 1) % mockQuestions.length;
-                setCurrentQuestion(mockQuestions[questionIndex.current]);
+                questionIndex.current = (questionIndex.current + 1) % questions.length;
+                setCurrentQuestion(questions[questionIndex.current].questionText);
+                setKeywords(questions[questionIndex.current].keywords.split(','));
             }, 10000);
             return () => clearInterval(questionInterval);
         }
-    }, [recording]);
+    }, [recording, questions]);
 
     useEffect(() => {
         if ('webkitSpeechRecognition' in window) {
@@ -111,10 +101,10 @@ function Demo() {
             };
 
             speechRecognitionRef.current.onerror = (event) => {
-                console.error('Speech recognition error', event);
+                toast.error('Speech recognition error', event);
             };
         } else {
-            console.error('Speech Recognition API not supported in this browser.');
+            toast.error('Speech Recognition API not supported in this browser.');
         }
     }, []);
 
@@ -124,23 +114,31 @@ function Demo() {
         }
     }, [transcription]);
 
-    const analyzeTranscription = (transcription) => {
-        const question = mockQuestions[questionIndex.current];
-        const answer = transcription.trim();
+    const analyzeText = (text) => {
+        const answerKeywords = text.toLowerCase().split(' ');
+        const keywordMatch = keywords.filter(keyword => answerKeywords.includes(keyword)).length;
+        const totalKeywords = keywords.length;
 
-        const analysisResults = analyzeText(answer, question);
+        let relevance = (keywordMatch / totalKeywords) * 100;
+        let accuracy = Math.min(100, Math.max(0, relevance));
+        let efficiency = Math.min(100, Math.max(0, keywordMatch));
+
+        setRelevance(relevance);
+        setAccuracy(accuracy);
+        setEfficiency(efficiency);
 
         let feedbackMessage = '';
-        if (analysisResults.relevance > 50) {
+        if (relevance > 50) {
             feedbackMessage = 'Your answer is relevant to the question.';
         } else {
             feedbackMessage = 'Your answer may not be directly related to the question.';
         }
-
         setFeedback(feedbackMessage);
-        setRelevance(analysisResults.relevance);
-        setAccuracy(analysisResults.accuracy);
-        setEfficiency(analysisResults.efficiency);
+    };
+
+    const analyzeTranscription = (transcription) => {
+        const answer = transcription.trim();
+        analyzeText(answer);
     };
 
     const startRecording = () => {
@@ -156,12 +154,10 @@ function Demo() {
             mediaRecorderRef.current.start();
             setRecording(true);
             speechRecognitionRef.current.start();
-        }).catch(error => {
-            console.error('Error accessing media devices.', error);
         });
     };
 
-    const stopRecording = () => {
+    const stopRecording = async() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
             mediaRecorderRef.current.stop();
         }
@@ -171,6 +167,37 @@ function Demo() {
         setRecording(false);
         setRecordingCompleted(true);
         speechRecognitionRef.current.stop();
+
+        // Post feedback to the backend
+        const feedbackData = {
+            feedback,
+            accuracy,
+            relevance,
+            efficiency,
+            rating: (accuracy + relevance + efficiency) / 3 
+        };
+
+        const newData = {
+            id: 0,
+          accuracy:feedbackData.accuracy,
+          efficiency:feedbackData.efficiency,
+          relevance:feedbackData.relevance,
+          rating:feedbackData.rating,
+          feedback:feedbackData.feedback
+        }
+        await axios.post(`http://127.0.0.1:8080/api/feedbacks/students/${studentId}`, newData, {
+            headers: {
+                Authorization: `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                console.log("Feedback saved successfully:", response.data);
+            })
+            .catch(error => {
+                console.log(feedbackData);
+                toast.error("There was an error saving the feedback!", error);
+            });
     };
 
     return (
@@ -179,11 +206,7 @@ function Demo() {
             {!recordingCompleted ? (
                 <>
                     <div className={`video-container ${currentQuestion ? 'large' : ''}`}>
-                        <video 
-                            ref={videoRef} 
-                            className="video-frame" 
-                            muted
-                        />
+                        <video ref={videoRef} className="video-frame" muted />
                     </div>
                     <div className="button-container">
                         {!recording ? (
@@ -198,26 +221,14 @@ function Demo() {
                             <p>{currentQuestion}</p>
                         </div>
                     )}
-                    {transcription && (
-                        <div className="transcription-container">
-                            <h2>Transcription:</h2>
-                            <p>{transcription}</p>
-                        </div>
-                    )}
                 </>
             ) : (
                 <div className="video-preview-container">
                     {videoURL && (
                         <>
                             <h2>Recorded Video:</h2>
-                            <video src={videoURL} width="400" controls className="video-preview" />
+                            <video src={videoURL} width="400"   controls className="video-preview" />
                         </>
-                    )}
-                    {transcription && (
-                        <div className="transcription-container">
-                            <h2>Transcription:</h2>
-                            <p>{transcription}</p>
-                        </div>
                     )}
                     {feedback && (
                         <div className="feedback-container">
@@ -242,4 +253,4 @@ function Demo() {
     );
 }
 
-export default Demo;
+export default VideoRecord;

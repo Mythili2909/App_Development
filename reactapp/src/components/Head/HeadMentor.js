@@ -1,170 +1,123 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import '../../assets/style/HeadCss/HeadMentor.css';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
+import '../../assets/style/MentorCss/MentorStudent.css'; // Assuming you have similar styles for mentors
+
+const apiUrl = 'http://localhost:8080/api/heads';
 
 function HeadMentor() {
-  const [mentors, setMentors] = useState([
-    { id: '1', name: 'Alice Johnson', email: 'alice@example.com', password: '*****', contact: '123-456-7890', dept: 'CSE', classBeingMentored: 'A' },
-    { id: '2', name: 'Bob Brown', email: 'bob@example.com', password: '*****', contact: '987-654-3210', dept: 'IT', classBeingMentored: 'B' },
-    // More mentor data here...
-  ]);
-
+  const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDept, setSearchDept] = useState('');
-  const [searchBatch, setSearchBatch] = useState('');
-  const [formData, setFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editFormData, setEditFormData] = useState({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
+  const [viewDetails, setViewDetails] = useState(null);
+  const [dept, setDept] = useState('');
 
-  // Filter mentors based on search terms and dropdown selections
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    // Fetch department of the head
+    axios.get(`${apiUrl}/id/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((response) => {
+        setDept(response.data.dept); // Assuming response.data has dept field
+        return axios.get(`http://localhost:8080/api/mentors/dept/${response.data.dept}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      })
+      .then((response) => {
+        setMentors(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [token, userId]);
+
   const filteredMentors = mentors.filter(mentor =>
-    (mentor.id.includes(searchTerm) || 
-    mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    mentor.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (searchDept ? mentor.dept === searchDept : true) &&
-    (searchBatch ? mentor.classBeingMentored === searchBatch : true)
+    mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    mentor.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleViewDetails = (mentor) => {
+    setViewDetails(mentor);
   };
 
-  const handleEditInputChange = (e) => {
-    setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
+  const handleClosePopup = () => {
+    setViewDetails(null);
   };
 
-  const handleAddOrEdit = () => {
-    const { id, name, email, password, contact, dept, classBeingMentored } = formData;
-    if (id && name && email && password && contact && dept && classBeingMentored) {
-      if (editingIndex !== null) {
-        const updatedMentors = [...mentors];
-        updatedMentors[editingIndex] = formData;
-        setMentors(updatedMentors);
-        setEditingIndex(null);
-      } else {
-        setMentors([...mentors, formData]);
-      }
-      setFormData({ id: '', name: '', email: '', password: '', contact: '', dept: '', classBeingMentored: '' });
-    } else {
-      alert('All fields must be filled out.');
-    }
-  };
+  const renderPieChart = (ratings) => {
+    const data = {
+      labels: ['Ratings', 'Remaining'],
+      datasets: [
+        {
+          label: 'Mentor Ratings',
+          data: [ratings, 10 - ratings], // Assuming the maximum rating is 10
+          backgroundColor: ['#36A2EB', '#FF6384'],
+          hoverBackgroundColor: ['#36A2EB', '#FF6384']
+        }
+      ]
+    };
 
-  const handleEditClick = (index) => {
-    setEditingIndex(index);
-    setEditFormData(mentors[index]);
-  };
-
-  const handleSaveClick = (index) => {
-    const updatedMentors = [...mentors];
-    updatedMentors[index] = editFormData;
-    setMentors(updatedMentors);
-    setEditingIndex(null);
-  };
-
-  const handleCancelClick = () => {
-    setEditingIndex(null);
-  };
-
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this mentor?")) {
-      const updatedMentors = mentors.filter((_, i) => i !== index);
-      setMentors(updatedMentors);
-    }
+    return (
+      <div className="chart-container">
+        <Pie data={data} />
+      </div>
+    );
   };
 
   return (
     <div className="mentor-view">
-      <h2>Mentor Management</h2>
-      <div className="filters">
-        <input
-          type="text"
-          placeholder="Search by ID, name, or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <select value={searchDept} onChange={(e) => setSearchDept(e.target.value)}>
-          <option value="">All Departments</option>
-          <option value="CSE">CSE</option>
-          <option value="IT">IT</option>
-          <option value="CIVIL">CIVIL</option>
-          <option value="MECH">MECH</option>
-          <option value="EEE">EEE</option>
-          <option value="ECE">ECE</option>
-        </select>
-        <select value={searchBatch} onChange={(e) => setSearchBatch(e.target.value)}>
-          <option value="">All Classes</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-        </select>
-      </div>
-
-      <div className="mentor-form">
-        <input type="text" name="id" placeholder="ID" value={formData.id} onChange={handleInputChange} />
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleInputChange} />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} />
-        <input type="text" name="contact" placeholder="Contact" value={formData.contact} onChange={handleInputChange} />
-        <input type="text" name="dept" placeholder="Department" value={formData.dept} onChange={handleInputChange} />
-        <input type="text" name="classBeingMentored" placeholder="Class Being Mentored" value={formData.classBeingMentored} onChange={handleInputChange} />
-        <div className="add-mentor-button-container">
-          <button className="add-mentor-button" onClick={handleAddOrEdit}>
-            <FontAwesomeIcon icon={faPlus} /> {editingIndex !== null ? 'Update Mentor' : 'Add Mentor'}
-          </button>
-        </div>
-      </div>
-
+      <h2 className="mentor-title">Mentor Management</h2>
+      <input
+        type="text"
+        placeholder="Search by Name or Email..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mentor-search"
+      />
       <table className="mentor-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Password</th>
-            <th>Contact</th>
-            <th>Department</th>
-            <th>Class</th>
+            <th>Dept</th>
+            <th>Class Mentoring</th>
+            <th>Ratings</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredMentors.map((mentor, index) => (
-            <tr key={index}>
-              {editingIndex === index ? (
-                <>
-                  <td><input type="text" name="id" value={editFormData.id} onChange={handleEditInputChange} disabled /></td>
-                  <td><input type="text" name="name" value={editFormData.name} onChange={handleEditInputChange} /></td>
-                  <td><input type="email" name="email" value={editFormData.email} onChange={handleEditInputChange} /></td>
-                  <td><input type="password" name="password" value={editFormData.password} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="contact" value={editFormData.contact} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="dept" value={editFormData.dept} onChange={handleEditInputChange} /></td>
-                  <td><input type="text" name="classBeingMentored" value={editFormData.classBeingMentored} onChange={handleEditInputChange} /></td>
-                  <td>
-                    <FontAwesomeIcon icon={faCheck} onClick={() => handleSaveClick(index)} className="action-icon" />
-                    <FontAwesomeIcon icon={faTimes} onClick={handleCancelClick} className="action-icon" />
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td>{mentor.id}</td>
-                  <td>{mentor.name}</td>
-                  <td>{mentor.email}</td>
-                  <td>{mentor.password}</td>
-                  <td>{mentor.contact}</td>
-                  <td>{mentor.dept}</td>
-                  <td>{mentor.classBeingMentored}</td>
-                  <td>
-                    <FontAwesomeIcon icon={faEdit} onClick={() => handleEditClick(index)} className="action-icon" />
-                    <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(index)} className="action-icon" />
-                  </td>
-                </>
-              )}
+          {filteredMentors.map((mentor) => (
+            <tr key={mentor.email}>
+              <td>{mentor.name}</td>
+              <td>{mentor.email}</td>
+              <td>{mentor.dept}</td>
+              <td>{mentor.classBeingMentored}</td>
+              <td>{mentor.overallRatings}</td>
+              <td>
+                <FontAwesomeIcon icon={faEye} className="mentor-action-icon" onClick={() => handleViewDetails(mentor)} />
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {viewDetails && (
+        <div className="mentor-popup">
+          <h3>Mentor Details</h3>
+          <p><strong>Name:</strong> {viewDetails.name}</p>
+          <p><strong>Email:</strong> {viewDetails.email}</p>
+          <p><strong>Department:</strong> {viewDetails.dept}</p>
+          <p><strong>Class Mentoring:</strong> {viewDetails.classBeingMentored}</p>
+          <p><strong>Ratings:</strong> {viewDetails.overallRatings}</p>
+          {renderPieChart(viewDetails.overallRatings)}
+          <button onClick={handleClosePopup}>Close</button>
+        </div>
+      )}
     </div>
   );
 }
