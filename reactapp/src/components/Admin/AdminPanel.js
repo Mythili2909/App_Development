@@ -46,7 +46,7 @@ const handleLogout = () => {
               </Link>
             </li>
             <li>
-              <Link to="/admindashboard/mentor">
+            <Link to="/admindashboard/mentor">
                 <i className="fas fa-edit nav-icon"></i>
                 Mentor
               </Link>
@@ -76,10 +76,7 @@ const handleLogout = () => {
               </Link>
             </li> */}
             <li>
-              <Link to="/admindashboard/reports">
-                <i className="fas fa-chart-bar nav-icon"></i>
-                Reports
-              </Link>
+              
             </li>
             
             <li onClick={handleLogout} >
