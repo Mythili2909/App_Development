@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -58,12 +57,12 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers(
                                                                 "/api/users/**",
-                                                                "/api/mentor/**",
-                                                                "/api/feedback/**",
-                                                                "/api/interview/**",
-                                                                "/api/student/**",
-                                                                "/api/head/**",
-                                                                "/api/interviewer/**")
+                                                                "/api/mentors/**",
+                                                                "/api/feedbacks/**",
+                                                                "/api/interviews/**",
+                                                                "/api/students/**",
+                                                                "/api/heads/**",
+                                                                "/api/interviewers/**")
                                                 .authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

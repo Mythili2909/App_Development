@@ -23,38 +23,95 @@ function Login() {
     }));
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  // const validateForm = () => {
+  //   const newErrors = {};
 
     
 
+  //   return newErrors;
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const validationErrors = validateForm();
+
+  //   if (Object.keys(validationErrors).length > 0) {
+  //     setErrors(validationErrors);
+  //   } else {
+  //     setErrors({});
+  //     try {
+  //       console.log('Sending login request with:', formData); // Log request data
+  //       const response = await axios.post(
+  //         'http://127.0.0.1:8080/api/login',
+  //         formData
+  //       );
+  //       console.log('Login Response:', response.data); // Log response data
+  //       const { token, role } = response.data;
+  //       const email = formData.email;
+
+  //       localStorage.setItem('token', token);
+  //       localStorage.setItem('role', role);
+  //       localStorage.setItem('email', email);
+
+  //       login({ email, role });
+
+  //       switch (role) {
+  //         case 'ROLE_ADMIN':
+  //           navigate('/admindashboard');
+  //           break;
+  //         case 'ROLE_STUDENT':
+  //           navigate('/studentdashboard');
+  //           break;
+  //         case 'ROLE_MENTOR':
+  //           navigate('/mentordashboard');
+  //           break;
+  //         case 'ROLE_HEAD':
+  //           navigate('/headdashboard');
+  //           break;
+  //         case 'ROLE_INTERVIEWER':
+  //           navigate('/interviewerdashboard');
+  //           break;
+  //         default:
+  //           navigate('/');
+  //       }
+  //     } catch (error) {
+  //       console.error('Login failed:', error.response?.data || error.message); // Log detailed error information
+  //       setErrors({ form: 'Invalid email or password' });
+  //     }
+  //   }
+  // };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password.trim()) newErrors.password = 'Password is required';
     return newErrors;
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
-
+  
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
       setErrors({});
       try {
-        console.log('Sending login request with:', formData); // Log request data
+        console.log('Sending login request with:', formData);
         const response = await axios.post(
           'http://127.0.0.1:8080/api/login',
           formData
         );
-        console.log('Login Response:', response.data); // Log response data
+        console.log('Login Response:', response.data);
         const { token, role } = response.data;
         const email = formData.email;
-
+  
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
         localStorage.setItem('email', email);
-
+  
         login({ email, role });
-
+  
         switch (role) {
           case 'ROLE_ADMIN':
             navigate('/admindashboard');
@@ -72,15 +129,16 @@ function Login() {
             navigate('/interviewerdashboard');
             break;
           default:
+            console.warn('Unhandled role:', role);
             navigate('/');
         }
       } catch (error) {
-        console.error('Login failed:', error.response?.data || error.message); // Log detailed error information
+        console.error('Login failed:', error.response?.data || error.message);
         setErrors({ form: 'Invalid email or password' });
       }
     }
   };
-
+  
   return (
     <div className="background-wrapper">
       <div className="login-container">

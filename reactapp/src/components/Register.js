@@ -46,13 +46,13 @@ function Register() {
             newErrors.email = 'Email address is invalid';
         }
     
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-        } else if (!/[a-zA-Z]/.test(formData.password)) {
-            newErrors.password = 'Password must contain at least one alphabet';
-        }
+        // if (!formData.password) {
+        //     newErrors.password = 'Password is required';
+        // } else if (formData.password.length < 6) {
+        //     newErrors.password = 'Password must be at least 6 characters';
+        // } else if (!/[a-zA-Z]/.test(formData.password)) {
+        //     newErrors.password = 'Password must contain at least one alphabet';
+        // }
     
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Confirm Password is required';
